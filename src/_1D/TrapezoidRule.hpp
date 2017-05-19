@@ -1,9 +1,9 @@
-#ifndef Definite_TrapezoidRule_hpp
-#define Definite_TrapezoidRule_hpp
+#ifndef _1D_TrapezoidRule_hpp
+#define _1D_TrapezoidRule_hpp
 
 #include<functional>
 
-namespace Definite {
+namespace _1D {
 
 /** @class 
   * @brief A class that implements the trapezoid rule.

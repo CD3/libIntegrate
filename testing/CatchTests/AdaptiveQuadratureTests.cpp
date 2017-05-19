@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "Definite/AdaptiveQuadrature.hpp"
-#include "Definite/TrapezoidRule.hpp"
+#include "_1D/AdaptiveQuadrature.hpp"
+#include "_1D/TrapezoidRule.hpp"
 
 namespace  AdaptiveQuadratureTests {
 
@@ -22,7 +22,7 @@ double box_func(double x)
 
 TEST_CASE( "Testing adaptive quadrature with trapezoid rule on linear functions." ) {
 
-  Definite::AdaptiveQuadrature<Definite::TrapezoidRule,double> integrate;
+  _1D::AdaptiveQuadrature<_1D::TrapezoidRule,double> integrate;
   double I;
 
   I = integrate( linear_func, 2, 5 );
@@ -38,7 +38,7 @@ TEST_CASE( "Testing adaptive quadrature with trapezoid rule on linear functions.
 
 TEST_CASE( "Testing adaptive quadrature with trapezoid rule on box functions." ) {
 
-  Definite::AdaptiveQuadrature<Definite::TrapezoidRule,double> integrate;
+  _1D::AdaptiveQuadrature<_1D::TrapezoidRule,double> integrate;
   double I;
 
   I = integrate( box_func, 0, 10 );

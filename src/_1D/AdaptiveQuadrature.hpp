@@ -1,5 +1,5 @@
-#ifndef Definite_AdaptiveQuadrature_hpp
-#define Definite_AdaptiveQuadrature_hpp
+#ifndef _1D_AdaptiveQuadrature_hpp
+#define _1D_AdaptiveQuadrature_hpp
 
 #include <boost/optional.hpp>
 #include <boost/optional/optional_io.hpp>
@@ -10,7 +10,7 @@
   * @date 05/18/17
   */
 
-namespace Definite {
+namespace _1D {
 
 /** @class AdaptiveQuadrature
   * @brief An adaptive integration method based on the trapezoid rule.

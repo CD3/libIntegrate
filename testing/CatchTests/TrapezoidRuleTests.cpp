@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "Definite/TrapezoidRule.hpp"
+#include "_1D/TrapezoidRule.hpp"
 
 namespace TrapeziodRuleTests
 {
@@ -22,7 +22,7 @@ double box_func(double x)
 
 TEST_CASE( "Testing trapezoid rule on linear functions." ) {
 
-  Definite::TrapezoidRule<double> integrate;
+  _1D::TrapezoidRule<double> integrate;
   double I;
 
   I = integrate( linear_func, 2, 5, 2 );
@@ -38,7 +38,7 @@ TEST_CASE( "Testing trapezoid rule on linear functions." ) {
 
 TEST_CASE( "Testing trapezoid rule on box functions." ) {
 
-  Definite::TrapezoidRule<double> integrate;
+  _1D::TrapezoidRule<double> integrate;
   double I;
 
   I = integrate( box_func, 0, 10, 2 );
