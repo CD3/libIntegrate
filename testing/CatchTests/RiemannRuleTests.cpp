@@ -1,9 +1,9 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/TrapezoidRule.hpp"
+#include "_1D/RiemannRule.hpp"
 
-namespace TrapeziodRuleTests
+namespace ReimannRuleTests
 {
 
 double linear_func(double x)
@@ -20,25 +20,20 @@ double box_func(double x)
   return 0;
 }
 
-TEST_CASE( "Testing trapezoid rule on linear functions." ) {
+TEST_CASE( "Testing Riemann rule on linear functions." ) {
 
-  _1D::TrapezoidRule<double> integrate;
+  _1D::RiemannRule<double> integrate;
   double I;
 
   I = integrate( linear_func, 2, 5, 2 );
-  REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
+  REQUIRE( I == Approx( linear_func(2)*1.5 + linear_func(3.5)*1.5 ) );
 
-  I = integrate([](double x){return 2*x + 3;},2,5,2);
-  REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
-
-  I = integrate([](double x){return linear_func(x);},2,5,2);
-  REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
 }
 
-TEST_CASE( "Testing trapezoid rule on box functions." ) {
+TEST_CASE( "Testing Riemann rule on box functions." ) {
 
-  _1D::TrapezoidRule<double> integrate;
+  _1D::RiemannRule<double> integrate;
   double I;
 
   I = integrate( box_func, 0, 10, 1 );

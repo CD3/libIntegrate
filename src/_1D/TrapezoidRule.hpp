@@ -23,19 +23,22 @@ class TrapezoidRule
 };
 
 
+/**
+ * @param f function or functor to be integrated.
+ * @param a lower limit of integration.
+ * @param b upper limit of integration.
+ * @param N number of *sub-intervals* to divide the integral [a,b] into.
+ **/
 template<typename T>
 template<typename F>
 T TrapezoidRule<T>::operator()( F f, T a, T b, size_t N )
 {
-  if(N < 2)
-    throw std::runtime_error("Cannot use trapezoid rule to evaluate integral with less than 2 points.");
   T sum = 0;
-  T dx = (b-a)/(N-1);
-  T x = a;
-  for(int i = 0; i < N-1; i++)
+  T dx = (b-a)/N; // NOTE: N is the number of sub-intervals here
+  T x;
+  for(x = a; x < b; x += dx)
   {
     sum += f(x) + f(x + dx);
-    x += dx;
   }
   sum *= 0.5*dx;
   return sum;
