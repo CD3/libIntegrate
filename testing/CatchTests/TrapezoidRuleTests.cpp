@@ -58,4 +58,27 @@ TEST_CASE( "Testing trapezoid rule on box functions." ) {
 
 }
 
+TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
+
+  _1D::TrapezoidRule<double> integrate;
+  double I;
+
+  std::vector<double> x(3),y(3);
+  x[0] = 0; y[0] = 1;
+  x[1] = 1; y[1] = 2;
+  x[2] = 2; y[2] = 3;
+  
+
+  I = integrate( x, y );
+  REQUIRE( I == Approx( 4 ) );
+
+  I = integrate( x, y, 0.5 );
+  REQUIRE( I == Approx( 2.5 ) );
+
+  I = integrate( x, y, boost::none, 0.5 );
+  REQUIRE( I == Approx( 1.5 ) );
+
+
+}
+
 }

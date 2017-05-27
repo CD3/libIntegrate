@@ -16,6 +16,7 @@ class SimpsonRule
     SimpsonRule (){};
     virtual ~SimpsonRule (){};
 
+    // This version will integrate a callable between two points
     template<typename F>
     T operator()( F f, T a, T b, size_t N );
 
