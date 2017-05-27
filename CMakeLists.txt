@@ -88,6 +88,7 @@ set( CPACK_PACKAGE_VERSION_MINOR ${${PROJECT_NAME}_VERSION_MINOR} )
 set( CPACK_PACKAGE_VERSION_PATCH ${${PROJECT_NAME}_VERSION_PATCH} )
 
 
+set( _${PROJECT_NAME}_INCLUDE_DIRS "" )
 
 
 #     _                           _                              _               _        
@@ -115,7 +116,7 @@ message saying that Boost was NOT found. This does not mean that no boost
 installation was found." )
 # The boost command line argument parser.
 find_package( Boost COMPONENTS program_options)
-include_directories( ${Boost_INCLUDE_DIRS} )
+list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} )
 set( Boost_LIBS ${Boost_LIBS} ${Boost_LIBRARIES} )
 
 # The boost header libraries
@@ -125,8 +126,7 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 
 # The eigen linear algebra library.
 find_package( Eigen3 REQUIRED )
-include_directories( ${EIGEN3_INCLUDE_DIR} )
-set( HAVE_LIBEIGEN3 1 )
+list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR} )
 
 # _           _ _     _ 
 #| |__  _   _(_) | __| |
@@ -134,11 +134,10 @@ set( HAVE_LIBEIGEN3 1 )
 #| |_) | |_| | | | (_| |
 #|_.__/ \__,_|_|_|\__,_|
                        
-
 # Add any specific comiler defines that you need. These should be
 # defines that your source code uses. Don't add things like --std=g++11 for example,
 # this will be taken care of by target_compile_features command.
-add_definitions(  )
+list( APPEND _${PROJECT_NAME}_DEFINITIONS "" )
 
 # The configure_file command is used to create a source file from a template.
 # For example, we can insert version information into our source code by creating
@@ -150,8 +149,7 @@ configure_file( "${PROJECT_SOURCE_DIR}/src/version.h"
                 "${PROJECT_SOURCE_DIR}/src/version.h")
 
 
-include_directories( "${PROJECT_SOURCE_DIR}"
-                     "${PROJECT_SOURCE_DIR}/src") 
+list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
 
 # Add the source code for your project here.
 # This command will find all *.cpp, *.hpp, and *.h files in the source directory.
@@ -173,6 +171,8 @@ set( ${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_DETECTED_SOURCES}
 
 )
 
+ include_directories( ${_${PROJECT_NAME}_INCLUDE_DIRS} )
+ add_definitions( ${_${PROJECT_NAME}_DEFINITIONS} )
 
 
 # If your project is a library, use add_library. The file that is created will be named lib<TARGET>, so
@@ -210,3 +210,7 @@ if( BUILD_SWIG_WRAPPERS )
 add_subdirectory( swig )
 endif( BUILD_SWIG_WRAPPERS )
 
+
+set( ${PROJECT_NAME}_INCLUDE_DIRS ${_${PROJECT_NAME}_INCLUDE_DIRS} CACHE INTERNAL "${PROJECT_NAME} Include Dirs:" FORCE)
+set( ${PROJECT_NAME}_DEFINITIONS  ${_${PROJECT_NAME}_DEFINITIONS}  CACHE INTERNAL "${PROJECT_NAME} Compiler Definitions:" FORCE)
+set( ${PROJECT_NAME}_CONFIGURED   1                                CACHE INTERNAL "${PROJECT_NAME} Configured:" FORCE) # that indicates this project has been configured
