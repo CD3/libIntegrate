@@ -24,7 +24,9 @@ endforeach()
 
 
 # Add unit test executable
-set( testName CatchTests )
+# we need to prefix this with the project name so it won't collide
+# with other projects
+set( testName ${PROJECT_NAME}_CatchTests )
 add_executable(${testName} ${unitTest_SOURCES})
 target_compile_features( ${testName} PRIVATE ${cxx_needed_features})
 target_compile_definitions( ${testName} PRIVATE -DTESTING )

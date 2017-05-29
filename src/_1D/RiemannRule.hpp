@@ -18,24 +18,24 @@ class RiemannRule
     virtual ~RiemannRule (){};
 
     // This version will integrate a callable between two points
-    template<typename F>
-    T operator()( F f, T a, T b, size_t N );
+    template<typename F, typename X>
+    T operator()( F f, X a, X b, size_t N );
 
     // This version will integrate a set of discrete points
-    template<typename C>
-    T operator()( C &x, C &y, boost::optional<T> a = boost::none, boost::optional<T> b = boost::none);
+    template<typename X, typename Y>
+    T operator()( X &x, Y &y );
 
   protected:
 };
 
 
 template<typename T>
-template<typename F>
-T RiemannRule<T>::operator()( F f, T a, T b, size_t N )
+template<typename F, typename X>
+T RiemannRule<T>::operator()( F f, X a, X b, size_t N )
 {
   T sum = 0;
-  T dx = (b-a)/N;
-  T x = a;
+  X dx = (b-a)/N; // make sure we don't get integer rounding
+  X x = a;
   for(int i = 0; i < N; i++)
   {
     sum += f(x);
@@ -46,18 +46,12 @@ T RiemannRule<T>::operator()( F f, T a, T b, size_t N )
 }
 
 template<typename T>
-template<typename C>
-T RiemannRule<T>::operator()( C &x, C &y, boost::optional<T> a, boost::optional<T> b )
+template<typename X, typename Y>
+T RiemannRule<T>::operator()( X &x, Y &y )
 {
   T sum = 0;
-  if(!a)
-    a = x[0];
-  if(!b)
-    b = x[x.size()-1];
-
   for(int i = 0; i < x.size()-1; i++)
-    if(x[i] >= *a && x[i] <= *b)
-      sum += y[i]*(x[i+1]-x[i]);
+    sum += y[i]*(x[i+1]-x[i]);
 
   return sum;
 }

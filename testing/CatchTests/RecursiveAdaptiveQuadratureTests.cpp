@@ -25,13 +25,13 @@ TEST_CASE( "Testing adaptive quadrature with trapezoid rule on linear functions.
   _1D::RecursiveAdaptiveQuadrature<_1D::TrapezoidRule,double> integrate;
   double I;
 
-  I = integrate( linear_func, 2, 5 );
+  I = integrate( linear_func, 2., 5. );
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
-  I = integrate([](double x){return 2*x + 3;},2,5);
+  I = integrate([](double x){return 2*x + 3;},2.,5.);
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
-  I = integrate([](double x){return linear_func(x);},2,5);
+  I = integrate([](double x){return linear_func(x);},2.,5.);
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
 }

@@ -25,13 +25,13 @@ TEST_CASE( "Testing trapezoid rule on linear functions." ) {
   _1D::TrapezoidRule<double> integrate;
   double I;
 
-  I = integrate( linear_func, 2, 5, 2 );
+  I = integrate( linear_func, 2., 5., 2 );
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
-  I = integrate([](double x){return 2*x + 3;},2,5,2);
+  I = integrate([](double x){return 2*x + 3;},2.,5.,2);
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
-  I = integrate([](double x){return linear_func(x);},2,5,2);
+  I = integrate([](double x){return linear_func(x);},2.,5.,2);
   REQUIRE( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
 }
@@ -41,19 +41,19 @@ TEST_CASE( "Testing trapezoid rule on box functions." ) {
   _1D::TrapezoidRule<double> integrate;
   double I;
 
-  I = integrate( box_func, 0, 10, 1 );
+  I = integrate( box_func, 0., 10., 1 );
   REQUIRE( I == Approx( 0 ) );
 
   // dx = 1
-  I = integrate( box_func, 0, 10, 10 );
+  I = integrate( box_func, 0., 10., 10 );
   REQUIRE( I == Approx( (5-1) + 1) );
 
   // dx = 0.5
-  I = integrate( box_func, 0, 10, 20 );
+  I = integrate( box_func, 0., 10., 20 );
   REQUIRE( I == Approx( (5-1) + 0.5) );
 
   // dx = 0.25
-  I = integrate( box_func, 0, 10, 40 );
+  I = integrate( box_func, 0., 10., 40 );
   REQUIRE( I == Approx( (5-1) + 0.25) );
 
 }
@@ -71,13 +71,6 @@ TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
 
   I = integrate( x, y );
   REQUIRE( I == Approx( 4 ) );
-
-  I = integrate( x, y, 0.5 );
-  REQUIRE( I == Approx( 2.5 ) );
-
-  I = integrate( x, y, boost::none, 0.5 );
-  REQUIRE( I == Approx( 1.5 ) );
-
 
 }
 
