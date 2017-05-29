@@ -21,7 +21,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #| .__/|_|  \___// |\___|\___|\__|  \___\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
 #|_|           |__/                                       |___/                                   
 
-project(ExampleProject) # replace ExampleProject with your project's name
+project(libIntegrate) # replace ExampleProject with your project's name
 
 # Sometimes you need/want to know if the project is being build as a standalone project (the user
 # is calling your CMakeLists.txt file directory) or as a sub-project (the user is calling
@@ -89,6 +89,7 @@ set( CPACK_PACKAGE_VERSION_PATCH ${${PROJECT_NAME}_VERSION_PATCH} )
 
 
 set( _${PROJECT_NAME}_INCLUDE_DIRS "" )
+set( _${PROJECT_NAME}_DEFINITIONS "" )
 
 
 #     _                           _                              _               _        
@@ -122,7 +123,7 @@ set( Boost_LIBS ${Boost_LIBS} ${Boost_LIBRARIES} )
 # The boost header libraries
 #find_package( Boost REQUIRED ) # if boost is a required dependency, use this
 find_package( Boost )
-include_directories( ${Boost_INCLUDE_DIRS} )
+list( APPEND _${PROJECT_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} )
 
 # The eigen linear algebra library.
 find_package( Eigen3 REQUIRED )
