@@ -6,7 +6,7 @@
 namespace _1D {
 
 /** @class 
-  * @brief A class that implements the trapezoid rule.
+  * @brief A class that implements Simposon's rule.
   * @author C.D. Clark III
   */
 template<typename T>
