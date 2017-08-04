@@ -9,7 +9,6 @@
 
 
 #endif // include protector
-#include "_1D/RecursiveAdaptiveQuadrature.hpp"
 #include "_1D/RiemannRule.hpp"
 #include "_1D/GaussianQuadratures/GaussLegendre.hpp"
 #include "_1D/TrapezoidRule.hpp"
