@@ -2,14 +2,11 @@
 #include "fakeit.hpp"
 
 #include "_1D/RiemannRule.hpp"
+#include "_2D/RiemannRule.hpp"
 
 
 namespace ReimannRuleTests
 {
-
-double linear_func(double x)
-{ return 2*x + 3;
-}
 
 double box_func(double x)
 {
@@ -20,18 +17,19 @@ double box_func(double x)
   return 0;
 }
 
-TEST_CASE( "Testing Riemann rule on linear functions." ) {
+TEST_CASE( "Testing 1D Riemann rule on linear functions." ) {
 
   _1D::RiemannRule<double> integrate;
   double I;
 
-  I = integrate( linear_func, 2., 5., 2 );
-  REQUIRE( I == Approx( linear_func(2)*1.5 + linear_func(3.5)*1.5 ) );
+  auto f = [](double x){ return 2*x + 3; };
+  I = integrate( f, 2., 5., 2 );
+  REQUIRE( I == Approx( f(2)*1.5 + f(3.5)*1.5 ) );
 
 
 }
 
-TEST_CASE( "Testing Riemann rule on box functions." ) {
+TEST_CASE( "Testing 1D Riemann rule on box functions." ) {
 
   _1D::RiemannRule<double> integrate;
   double I;
@@ -53,7 +51,7 @@ TEST_CASE( "Testing Riemann rule on box functions." ) {
 
 }
 
-TEST_CASE( "Testing Riemann rule on discrete set." ) {
+TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
   _1D::RiemannRule<double> integrate;
   double I;
@@ -66,6 +64,20 @@ TEST_CASE( "Testing Riemann rule on discrete set." ) {
 
   I = integrate( x, y );
   REQUIRE( I == Approx( 3 ) );
+
+}
+
+TEST_CASE( "Testing 2D Riemann rule on linear functions." ) {
+
+  _2D::RiemannRule<double> integrate;
+  double I;
+
+  auto f  = [](double x, double y){ return 10*x + 20*y + 30;};
+  auto fi = [](double x, double y){ return 10*x*x*y/2 + 20*y*y*x/2 + 30*x*y;};
+
+  I = integrate( f, 2., 5., 1000, 3., 6., 1000 );
+  REQUIRE( I == Approx( ( fi(5,6) - fi(5,3) ) - ( fi(2,6) - fi(2,3) ) ).epsilon(0.001) );
+
 
 }
 
