@@ -28,7 +28,9 @@ class GaussLegendreQuadrature_imp
     template<typename F, typename X>
     T operator()( F f, X a, X b ) const;
 
-  protected:
+    const std::array<T,Order>& getX() const {return x;}
+    const std::array<T,Order>& getW() const {return w;}
+
 };
 
 
@@ -36,7 +38,6 @@ template<typename T, size_t Order>
 template<typename F, typename X>
 T GaussLegendreQuadrature_imp<T,Order>::operator()(F f, X a, X b) const
 {
-  T x1, x2;
   X apb = (b + a)/2;
   X amb = (b - a)/2;
 
