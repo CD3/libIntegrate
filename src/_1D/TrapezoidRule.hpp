@@ -14,8 +14,7 @@ template<typename T>
 class TrapezoidRule
 {
   public:
-    TrapezoidRule (){};
-    virtual ~TrapezoidRule (){};
+    TrapezoidRule() = default;
 
     // This version will integrate a callable between two points
     template<typename F>

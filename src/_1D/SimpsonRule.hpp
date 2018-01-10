@@ -13,8 +13,7 @@ template<typename T>
 class SimpsonRule
 {
   public:
-    SimpsonRule (){};
-    virtual ~SimpsonRule (){};
+    SimpsonRule() = default;
 
     // This version will integrate a callable between two points
     template<typename F>

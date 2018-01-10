@@ -17,8 +17,7 @@ class GaussLegendreQuadrature
   public:
     _1D::GQ::GaussLegendreQuadrature<T,Order> _1dInt;
 
-    GaussLegendreQuadrature() {};
-    virtual ~GaussLegendreQuadrature() {};
+    GaussLegendreQuadrature() = default;
 
     // This version will integrate a callable between four points
     template<typename F, typename X, typename Y>

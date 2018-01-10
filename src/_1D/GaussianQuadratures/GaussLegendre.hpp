@@ -21,8 +21,7 @@ class GaussLegendreQuadrature_imp
     std::array<T,Order> x;
 
   public:
-    GaussLegendreQuadrature_imp() {};
-    virtual ~GaussLegendreQuadrature_imp() {};
+    GaussLegendreQuadrature_imp() = default;
 
     // This version will integrate a callable between two points
     template<typename F, typename X>
@@ -81,7 +80,6 @@ class GaussLegendreQuadrature<T,8> : public detail::GaussLegendreQuadrature_imp<
       w[6 ] =  0.1012285362903763; x[6 ] =  -0.9602898564975363;
       w[7 ] =  0.1012285362903763; x[7 ] =   0.9602898564975363;
     }
-    virtual ~GaussLegendreQuadrature() {};
 
 };
 
@@ -113,7 +111,6 @@ class GaussLegendreQuadrature<T,16> : public detail::GaussLegendreQuadrature_imp
       w[14] =  0.0271524594117541; x[14] =  -0.9894009349916499;
       w[15] =  0.0271524594117541; x[15] =   0.9894009349916499;
     }
-    virtual ~GaussLegendreQuadrature() {};
 
 };
 
@@ -161,7 +158,6 @@ class GaussLegendreQuadrature<T,32> : public detail::GaussLegendreQuadrature_imp
       w[30] =  0.0070186100094701; x[30] =  -0.9972638618494816;
       w[31] =  0.0070186100094701; x[31] =   0.9972638618494816;
     }
-    virtual ~GaussLegendreQuadrature() {};
 
 };
 
@@ -241,7 +237,6 @@ class GaussLegendreQuadrature<T,64> : public detail::GaussLegendreQuadrature_imp
       w[62] =  0.0017832807216964; x[62] =  -0.9993050417357722;
       w[63] =  0.0017832807216964; x[63] =   0.9993050417357722;
     }
-    virtual ~GaussLegendreQuadrature() {};
 
 };
 

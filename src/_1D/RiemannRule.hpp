@@ -14,8 +14,7 @@ template<typename T>
 class RiemannRule
 {
   public:
-    RiemannRule (){};
-    virtual ~RiemannRule (){};
+    RiemannRule() = default;
 
     // This version will integrate a callable between two points
     template<typename F, typename X>
