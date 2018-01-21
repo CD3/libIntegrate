@@ -6,9 +6,12 @@
 #include<stdexcept>
 #include<functional>
 
-#include<boost/program_options.hpp>
+#include <boost/program_options.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <Interp.hpp>
 
 #include "Integrate.hpp"
 
@@ -36,14 +39,56 @@ void print_documentation( )
       <<"\n";
 }
 
-
 std::function<double(std::vector<double>&,std::vector<double>&)> create(std::string type)
 {
-  if( type == "riemann" )
+  if( boost::starts_with("riemann",type) )
     return _1D::RiemannRule<double>();
 
-  if( type == "trapezoid" )
+  if( boost::starts_with("trapezoid",type) )
     return _1D::TrapezoidRule<double>();
+
+  if( boost::starts_with("simpson",type) )
+    return [](std::vector<double>& x, std::vector<double>& y){
+      // create an interpolator to pass to the integrator
+      _1D::CubicSplineInterpolator<double> interp(x,y);
+
+      double min = *std::min_element( x.begin(), x.end() );
+      double max = *std::max_element( x.begin(), x.end() );
+
+      _1D::SimpsonRule<double> integ;
+
+      return integ( interp, min, max, x.size() );
+    };
+
+  if( boost::starts_with("gauss-legendre",type) )
+    return [](std::vector<double>& x, std::vector<double>& y){
+      // create an interpolator to pass to the integrator
+      _1D::CubicSplineInterpolator<double> interp(x,y);
+
+      double min = *std::min_element( x.begin(), x.end() );
+      double max = *std::max_element( x.begin(), x.end() );
+
+      // we have quadratures of order
+      // 8, 16, 32, and 64.
+      if( x.size() <= 8 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,8> integ;
+        return integ( interp, min, max );
+      }
+      if( x.size() <= 16 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,16> integ;
+        return integ( interp, min, max );
+      }
+      if( x.size() <= 32 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,32> integ;
+        return integ( interp, min, max );
+      }
+
+      _1D::GQ::GaussLegendreQuadrature<double,64> integ;
+      return integ( interp, min, max );
+    };
 
   return nullptr;
 }
@@ -85,9 +130,10 @@ int main( int argc, char* argv[])
     if (vm.count("list"))
     {
       print_version();
-      //cout<<"\tlinear\n";
-      //cout<<"\tspline\n";
-      //cout<<"\tmonotonic\n";
+      cout<<"\t'riemann' : simple riemann sum\n";
+      cout<<"\t'trapezoid' : trapezoid rule\n";
+      cout<<"\t'simpson' : simposon's rule (uses interpolation)\n";
+      cout<<"\t'gauss-legendre' : Gauss-Legendre interpolation (uses interpolation)\n";
       return 1;
     }
 
@@ -98,6 +144,12 @@ int main( int argc, char* argv[])
 
     // load data
     in.open( vm["integrate-data"].as<string>().c_str() );
+    if( !in.is_open() )
+    {
+      cerr << "ERROR: could not open file: "<<vm["integrate-data"].as<string>()<< endl;
+      return 0;
+    }
+
     ReadFunction( in, x, y, n );
     in.close();
 
