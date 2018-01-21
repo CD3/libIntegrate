@@ -36,7 +36,8 @@ find_package( Boost REQUIRED )
 string( REGEX REPLACE "^lib" "" LIB_NAME ${PROJECT_NAME} )
 add_library( ${LIB_NAME} INTERFACE )
 target_include_directories( ${LIB_NAME} INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${${PROJECT_NAME}_BINARY_DIR}>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
 target_sources(

@@ -5,7 +5,7 @@
 #include "_2D/RiemannRule.hpp"
 
 
-namespace ReimannRuleTests
+namespace RiemannRuleTests
 {
 
 double box_func(double x)
