@@ -40,8 +40,6 @@ target_include_directories( ${LIB_NAME} INTERFACE
 target_sources(
   ${LIB_NAME}
   INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/version.h>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/Integrate.hpp>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_2D/RiemannRule.hpp>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_2D/GaussianQuadratures/GaussLegendre.hpp>
