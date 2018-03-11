@@ -7,6 +7,8 @@ if [[ -z $tag ]]
 then
   echo "ERROR: version number required"
   echo "example: $0 v1.0.1"
+  echo "current tags:"
+  git tag
   exit 1
 fi
 
