@@ -98,7 +98,7 @@ else()
   set( VERSION_MAJOR "X" )
 endif()
 # strip off the major number
-string( REGEX REPLACE "^${VERSION_MAJOR}" "" TMP "${TMP}" )
+string( REGEX REPLACE "^v*${VERSION_MAJOR}" "" TMP "${TMP}" )
 
 # minor number will only be preceeded by a .
 # but may be followed by a . or -
