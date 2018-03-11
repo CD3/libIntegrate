@@ -1,3 +1,4 @@
 .*.swp
 build/
 build-*/
+setup-and-update-utils.sh
