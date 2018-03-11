@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(libIntegrate)
 if( STANDALONE )
-  include(GitVersion)
+  include(macro-git_version)
   GIT_VERSION(${PROJECT_NAME})
 else()
   set(${PROJECT_NAME}_VERSION "X.X-subproject")
