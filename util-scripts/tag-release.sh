@@ -30,4 +30,5 @@ $(find ./ -name 'pre-tag-release.sh')
 
 echo "tagging with ${tag}"
 git tag ${tag}
-
+git tag | grep ${tag}
+echo "Successfully tagged commit."
