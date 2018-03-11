@@ -7,7 +7,7 @@
   */
 
 
-#include "version.h"
+#include "libIntegrate_version.h"
 
 #include "_1D/RiemannRule.hpp"
 #include "_1D/GaussianQuadratures/GaussLegendre.hpp"
