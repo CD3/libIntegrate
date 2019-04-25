@@ -1,6 +1,17 @@
 #
-# Searches for a dependency.
-# 
+# Searches for a project dependency.
+#
+# This mocro tries to find an install or include directotry to satisfy a
+# project dependency. It uses find_package internally to detect installs.
+#
+# The locations that will be searched are determined my arguments to the macro
+#
+# - OVERRIDE_PATHS     : list of directories that will be searched for sub-directories to include. these directories are searched first. if the
+#                        dependency is found here, it will be used.
+# - PATHS              : list of directories that will be searched for installs, in addition to the normal system directories. the find_package command is used to detect the install.
+# - SUBDIRECTORY_PATHS : list of directories that will be searched for sub-directories to include if no override or installs are detected.
+#
+# Any additional arguments that are given to the macro will be passed directly to the find_package macro.
 #
 macro( find_project_dependency DEPENDENCY )
   message(STATUS "Searching for dependency: ${DEPENDENCY}")
@@ -28,13 +39,13 @@ macro( find_project_dependency DEPENDENCY )
   # look in the directories given by PATHS first, if they were given
   if( NOT ${${DEPENDENCY}_FOUND} )
   if( find_project_dependency_PATHS )
-    find_package( ${DEPENDENCY} QUIET ${find_project_dependency_UNPARSED_ARGS} PATHS ${find_project_dependency_PATHS} )
+    find_package( ${DEPENDENCY} ${find_project_dependency_UNPARSED_ARGUMENTS} QUIET PATHS ${find_project_dependency_PATHS} )
   endif()
   endif()
 
   # look in the system directories if dependency wasn't found
   if( NOT ${${DEPENDENCY}_FOUND} )
-    find_package( ${DEPENDENCY} QUIET ${find_project_dependency_UNPARSED_ARGS} )
+    find_package( ${DEPENDENCY} ${find_project_dependency_UNPARSED_ARGUMENTS} QUIET )
   endif()
 
   # if the dependency wasn't found
@@ -49,8 +60,11 @@ macro( find_project_dependency DEPENDENCY )
     # and REQUIRED was given
     if( find_project_dependency_REQUIRED )
       # throw an error
-      message(FATAL_ERROR "Could not find required dependency: ${DEPENDENCY}")
+      message(FATAL_ERROR "Could not find required dependency: ${DEPENDENCY}. Make sure the required version of the library is installed.")
     endif()
+  # if the dependency was found
+  else()
+    message(STATUS "Found ${DEPENDENCY} version ${${DEPENDENCY}_VERSION}.")
   endif()
 
 endmacro(find_project_dependency)
