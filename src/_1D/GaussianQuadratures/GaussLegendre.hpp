@@ -1,4 +1,3 @@
-
 #ifndef _1D_GaussianQuadratures_GaussLegendreQuadrature_hpp
 #define _1D_GaussianQuadratures_GaussLegendreQuadratrue_hpp
 
@@ -7,6 +6,8 @@
   * @author C.D. Clark III
   * @date 08/04/17
   */
+
+#include<array>
 
 namespace _1D {
 namespace GQ {

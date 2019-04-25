@@ -7,6 +7,8 @@
   * @date 08/04/17
   */
 
+#include<array>
+
 namespace Experimental {
 namespace _1D {
 namespace GQ {
