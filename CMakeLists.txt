@@ -24,10 +24,6 @@ configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h"
                 "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
 
 
-set( cxx_needed_features
-     cxx_auto_type
-   )
-
 find_package( Boost REQUIRED )
 
 string( REGEX REPLACE "^lib" "" LIB_NAME ${PROJECT_NAME} )
@@ -52,6 +48,7 @@ target_sources(
 )
 
 target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)
+target_compile_features( ${LIB_NAME} INTERFACE cxx_std_11 )
 
 if( STANDALONE )
 add_subdirectory( testing )
