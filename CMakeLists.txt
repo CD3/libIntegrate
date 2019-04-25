@@ -12,10 +12,10 @@ enable_testing()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+project(libIntegrate)
 include(macro-git_version)
 GIT_VERSION(libIntegrate)
-message( STATUS "libIntegrate version: ${libIntegrate_VERSION}")
-project(libIntegrate VERSION ${libIntegrate_VERSION})
+message( STATUS "libIntegrate version: ${${PROJECT_NAME}_VERSION}")
 
 # need to run configure_file twice
 configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}_version.h.in"
