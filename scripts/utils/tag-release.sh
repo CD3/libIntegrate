@@ -3,6 +3,13 @@
 tag=$1
 shift
 
+if [[ -n $(git status --porcelain) ]]
+then
+  echo "ERROR: working directory is not clean"
+  echo "commit all changes and try again."
+  exit 1
+fi
+
 if [[ -z $tag ]]
 then
   echo "ERROR: version number required"
@@ -12,6 +19,8 @@ then
   exit 1
 fi
 
+
+exit
 function exit_on_error()
 {
   echo "There was an error. Commit will not be tagged."
