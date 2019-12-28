@@ -17,7 +17,7 @@ class SimpsonRule
 
     // This version will integrate a callable between two points
     template<typename F>
-    T operator()( F f, T a, T b, size_t N );
+    T operator()( F f, T a, T b, size_t N ) const;
 
   protected:
 };
@@ -25,7 +25,7 @@ class SimpsonRule
 
 template<typename T>
 template<typename F>
-T SimpsonRule<T>::operator()( F f, T a, T b, size_t N )
+T SimpsonRule<T>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
   T dx = (b-a)/N; // size of each interval

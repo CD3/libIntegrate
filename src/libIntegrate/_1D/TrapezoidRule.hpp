@@ -18,11 +18,11 @@ class TrapezoidRule
 
     // This version will integrate a callable between two points
     template<typename F>
-    T operator()( F f, T a, T b, size_t N );
+    T operator()( F f, T a, T b, size_t N ) const;
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    T operator()( X &x, Y &y );
+    T operator()( X &x, Y &y ) const;
 
   protected:
 };
@@ -36,7 +36,7 @@ class TrapezoidRule
  **/
 template<typename T>
 template<typename F>
-T TrapezoidRule<T>::operator()( F f, T a, T b, size_t N )
+T TrapezoidRule<T>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
   T dx = (b-a)/N; // NOTE: N is the number of sub-intervals here
@@ -51,7 +51,7 @@ T TrapezoidRule<T>::operator()( F f, T a, T b, size_t N )
 
 template<typename T>
 template<typename X, typename Y>
-T TrapezoidRule<T>::operator()( X &x, Y &y )
+T TrapezoidRule<T>::operator()( X &x, Y &y ) const
 {
   T sum = 0;
   for(int i = 0; i < x.size()-1; i++)

@@ -18,11 +18,11 @@ class RiemannRule
 
     // This version will integrate a callable between two points
     template<typename F, typename X>
-    T operator()( F f, X a, X b, size_t N );
+    T operator()( F f, X a, X b, size_t N ) const;
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    T operator()( X &x, Y &y );
+    T operator()( X &x, Y &y ) const;
 
   protected:
 };
@@ -30,7 +30,7 @@ class RiemannRule
 
 template<typename T>
 template<typename F, typename X>
-T RiemannRule<T>::operator()( F f, X a, X b, size_t N )
+T RiemannRule<T>::operator()( F f, X a, X b, size_t N ) const
 {
   T sum = 0;
   X dx = (b-a)/N; // make sure we don't get integer rounding
@@ -46,7 +46,7 @@ T RiemannRule<T>::operator()( F f, X a, X b, size_t N )
 
 template<typename T>
 template<typename X, typename Y>
-T RiemannRule<T>::operator()( X &x, Y &y )
+T RiemannRule<T>::operator()( X &x, Y &y ) const
 {
   T sum = 0;
   for(int i = 0; i < x.size()-1; i++)
