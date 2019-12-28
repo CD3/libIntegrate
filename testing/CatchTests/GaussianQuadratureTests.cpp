@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/GaussianQuadratures/GaussLegendre.hpp"
-#include "_2D/GaussianQuadratures/GaussLegendre.hpp"
+#include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
+#include <libIntegrate/_2D/GaussianQuadratures/GaussLegendre.hpp>
 
 namespace GausssLegendreTests
 {

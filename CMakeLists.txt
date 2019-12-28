@@ -22,10 +22,10 @@ GIT_VERSION(libIntegrate)
 message( STATUS "libIntegrate version: ${${PROJECT_NAME}_VERSION}")
 
 # need to run configure_file twice
-configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}_version.h.in"
-                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
-configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h"
-                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}_version.h")
+configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}_version.h.in"
+                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h")
+configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h"
+                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h")
 
 
 find_package( Boost REQUIRED )
@@ -41,14 +41,14 @@ target_include_directories( ${LIB_NAME} INTERFACE
 target_sources(
   ${LIB_NAME}
   INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/Integrate.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_2D/RiemannRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_2D/GaussianQuadratures/GaussLegendre.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/Experimental/_1D/GaussianQuadratures/GaussLegendre.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_1D/SimpsonRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_1D/RiemannRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_1D/TrapezoidRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/_1D/GaussianQuadratures/GaussLegendre.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/Integrate.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_2D/RiemannRule.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_2D/GaussianQuadratures/GaussLegendre.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/Experimental/_1D/GaussianQuadratures/GaussLegendre.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/SimpsonRule.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/RiemannRule.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/TrapezoidRule.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/GaussianQuadratures/GaussLegendre.hpp>
 )
 
 target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)
@@ -89,17 +89,17 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 find_dependency(Boost)
 include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)
 "
-  )
+)
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   VERSION ${${PROJECT_NAME}_VERSION}
   COMPATIBILITY SameMajorVersion
-  )
+)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION cmake
-  )
+)
 
 
 

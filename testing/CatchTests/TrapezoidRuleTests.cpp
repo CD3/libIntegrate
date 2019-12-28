@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/TrapezoidRule.hpp"
+#include <libIntegrate/_1D/TrapezoidRule.hpp>
 
 namespace TrapeziodRuleTests
 {

@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/RiemannRule.hpp"
-#include "_2D/RiemannRule.hpp"
+#include <libIntegrate/_1D/RiemannRule.hpp>
+#include <libIntegrate/_2D/RiemannRule.hpp>
 
 
 namespace RiemannRuleTests

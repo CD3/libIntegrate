@@ -1,22 +1,2 @@
-#ifndef Integrate_hpp
-
-/** @file Integrate.hpp
-  * @brief 
-  * @author C.D. Clark III
-  * @date 08/04/17
-  */
-
-
-#include "libIntegrate_version.h"
-
-#include "_1D/RiemannRule.hpp"
-#include "_1D/GaussianQuadratures/GaussLegendre.hpp"
-#include "_1D/TrapezoidRule.hpp"
-#include "_1D/SimpsonRule.hpp"
-
-#include "_2D/RiemannRule.hpp"
-#include "_2D/GaussianQuadratures/GaussLegendre.hpp"
-
-#endif // include protector
-
-#define Integrate_hpp
+#warning "Including 'Integrate.hpp' is depreciated. Please include 'libIntegrate/Integrate.hpp' instead."
+#include "libIntegrate/Integrate.hpp"

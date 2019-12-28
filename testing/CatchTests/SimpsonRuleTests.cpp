@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/SimpsonRule.hpp"
+#include <libIntegrate/_1D/SimpsonRule.hpp>
 
 namespace SimpsonRuleTests
 {

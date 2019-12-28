@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "fakeit.hpp"
 
-#include "_1D/RiemannRule.hpp"
+#include <libIntegrate/_1D/RiemannRule.hpp>
 
 #include <boost/units/systems/si/force.hpp>
 #include <boost/units/systems/si/length.hpp>
