@@ -8,7 +8,11 @@ if( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR} )
   set(STANDALONE ON)
 endif( )
 
+option( BUILD_TESTS "Build unit tests" ON )
+if( ${BUILD_TESTS} )
 enable_testing()
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -50,7 +54,7 @@ target_sources(
 target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)
 target_compile_features( ${LIB_NAME} INTERFACE cxx_std_11 )
 
-if( STANDALONE )
+if( STANDALONE AND BUILD_TESTS )
 add_subdirectory( testing )
 endif()
 
