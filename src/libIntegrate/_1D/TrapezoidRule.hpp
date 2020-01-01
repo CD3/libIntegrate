@@ -39,7 +39,7 @@ template<typename F>
 T TrapezoidRule<T>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
-  T dx = (b-a)/N; // NOTE: N is the number of sub-intervals here
+  T dx = static_cast<T>(b-a)/N; // NOTE: N is the number of sub-intervals here
   T x;
   for(x = a; x < b; x += dx)
   {

@@ -37,8 +37,10 @@ class GaussLegendreQuadrature_imp
       static auto x = Derived::getX();
       static auto w = Derived::getW();
 
-      X apb = (b + a)/2;
-      X amb = (b - a)/2;
+      using T = typename GetType<Derived>::type;
+
+      T apb = static_cast<T>(b + a)/2;
+      T amb = static_cast<T>(b - a)/2;
 
       typename GetType<Derived>::type sum = 0;
       for(int i = 0; i < GetOrder<Derived>::value; i++)

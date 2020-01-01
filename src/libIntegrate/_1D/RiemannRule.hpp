@@ -33,7 +33,7 @@ template<typename F, typename X>
 T RiemannRule<T>::operator()( F f, X a, X b, size_t N ) const
 {
   T sum = 0;
-  X dx = (b-a)/N; // make sure we don't get integer rounding
+  T dx = static_cast<T>(b-a)/N; // make sure we don't get integer rounding
   X x = a;
   for(int i = 0; i < N; i++)
   {

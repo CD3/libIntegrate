@@ -28,7 +28,7 @@ template<typename F>
 T SimpsonRule<T>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
-  T dx = (b-a)/N; // size of each interval
+  T dx = static_cast<T>(b-a)/N; // size of each interval
   T x;
   for(x = a; x < b; x += dx)
   {
