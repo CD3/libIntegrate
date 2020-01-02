@@ -43,7 +43,7 @@ class GaussLegendreQuadrature_imp
       T amb = static_cast<T>(b - a)/2;
 
       typename GetType<Derived>::type sum = 0;
-      for(int i = 0; i < GetOrder<Derived>::value; i++)
+      for(size_t i = 0; i < GetOrder<Derived>::value; i++)
         sum += w[i]*f( apb + amb*x[i] );
       sum *= amb;
 

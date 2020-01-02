@@ -38,7 +38,7 @@ class TrapezoidRule
  * @param N number of *sub-intervals* to divide the integral [a,b] into.
  **/
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T TrapezoidRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
@@ -53,7 +53,7 @@ T TrapezoidRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 }
 
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T TrapezoidRule<T,NN>::operator()( F f, T a, T b ) const
 {
   T sum = 0;
@@ -72,7 +72,7 @@ template<typename X, typename Y>
 T TrapezoidRule<T,NN>::operator()( X &x, Y &y ) const
 {
   T sum = 0;
-  for(int i = 0; i < x.size()-1; i++)
+  for(size_t i = 0; i < x.size()-1; i++)
     sum += (y[i+1]+y[i])*(x[i+1]-x[i]);
   sum *= 0.5;
 

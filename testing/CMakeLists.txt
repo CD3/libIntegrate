@@ -20,7 +20,7 @@ endforeach()
 
 set( testName ${PROJECT_NAME}_CatchTests )
 add_executable(${testName} ${unitTest_SOURCES})
-target_compile_definitions( ${testName} PRIVATE -DTESTING )
+target_compile_definitions( ${testName} PRIVATE -DTESTING $<$<BOOL:${MSVC}>:_USE_MATH_DEFINES> )
 target_link_libraries(${testName} Integrate )
 target_include_directories( ${testName} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include" )
 set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${binDir})

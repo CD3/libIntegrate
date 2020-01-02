@@ -88,9 +88,10 @@ TEST_CASE( "Comparing 1D GQ:8 and GQ:64 rules on polynomials." ) {
 TEST_CASE( "Testing 1D GQ:64 rule on trig functions." ) {
   _1D::GQ::GaussLegendreQuadrature<double,64> integrate;
 
-  CHECK( integrate( sin, 0., M_PI )  == Approx( 2 ) );
-  CHECK( integrate( sin, M_PI, 2*M_PI )  == Approx( -2 ) );
-  CHECK( integrate( sin, M_PI/2, M_PI )  == Approx( 1 ) );
+  auto f = [](double x){return sin(x);};
+  CHECK( integrate( f, 0., M_PI )  == Approx( 2 ) );
+  CHECK( integrate( f, M_PI, 2*M_PI )  == Approx( -2 ) );
+  CHECK( integrate( f, M_PI/2, M_PI )  == Approx( 1 ) );
 
 }
 

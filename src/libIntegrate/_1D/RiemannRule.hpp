@@ -32,13 +32,13 @@ class RiemannRule
 
 
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T RiemannRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
   T dx = static_cast<T>(b-a)/N; // make sure we don't get integer rounding
   T x = a;
-  for(int i = 0; i < N; i++)
+  for(size_t i = 0; i < N; i++)
   {
     sum += f(x);
     x += dx;
@@ -48,13 +48,13 @@ T RiemannRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 }
 
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T RiemannRule<T,NN>::operator()( F f, T a, T b) const
 {
   T sum = 0;
   T dx = static_cast<T>(b-a)/NN; // make sure we don't get integer rounding
   T x = a;
-  for(int i = 0; i < NN; i++)
+  for(size_t i = 0; i < NN; i++)
   {
     sum += f(x);
     x += dx;
@@ -68,7 +68,7 @@ template<typename X, typename Y>
 T RiemannRule<T,NN>::operator()( X &x, Y &y ) const
 {
   T sum = 0;
-  for(int i = 0; i < x.size()-1; i++)
+  for(size_t i = 0; i < x.size()-1; i++)
     sum += y[i]*(x[i+1]-x[i]);
 
   return sum;

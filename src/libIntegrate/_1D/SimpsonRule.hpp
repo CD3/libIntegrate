@@ -27,7 +27,7 @@ class SimpsonRule
 
 
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T SimpsonRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 {
   T sum = 0;
@@ -43,7 +43,7 @@ T SimpsonRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
 }
 
 template<typename T, size_t NN>
-template<typename F, size_t, typename>
+template<typename F, size_t NN_, typename SFINAE>
 T SimpsonRule<T,NN>::operator()( F f, T a, T b ) const
 {
   T sum = 0;

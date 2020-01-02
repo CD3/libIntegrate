@@ -44,13 +44,13 @@ T GaussLegendreQuadrature<T,Order>::operator()(F f, X a, X b, Y c, Y d) const
   X amb = (b - a)/2;
   std::array<T, Order> sums;
 
-  #pragma paralle for
-  for(int i = 0; i < Order; i++)
+  #pragma parallel for
+  for(size_t i = 0; i < Order; i++)
     sums[i] = _1dInt( [&](Y y){ return f(apb + amb*_1dInt.getX()[i], y); }, c, d );
 
   // now integrate over x
   T sum = 0;
-  for(int i = 0; i < Order; i++)
+  for(size_t i = 0; i < Order; i++)
     sum += _1dInt.getW()[i]*sums[i];
   sum *= amb;
 
