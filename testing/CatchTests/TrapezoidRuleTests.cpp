@@ -74,4 +74,16 @@ TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
 
 }
 
+TEST_CASE( "Testing 1D Trapezoid rule with static interval number." ) {
+
+  //_1D::TrapezoidRule<double,10> integrate;
+  //double I;
+
+  //auto f = [](double x){ return 2*x + 3; };
+  //I = integrate( f, 2, 5 );
+  //REQUIRE( I == Approx( f(2)*1.5 + f(3.5)*1.5 ) );
+
+
+}
+
 }

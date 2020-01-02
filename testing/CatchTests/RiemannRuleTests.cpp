@@ -81,4 +81,17 @@ TEST_CASE( "Testing 2D Riemann rule on linear functions." ) {
 
 }
 
+
+TEST_CASE( "Testing 1D Riemann rule with static interval number." ) {
+
+  _1D::RiemannRule<double,10> int1;
+  _1D::RiemannRule<double> int2;
+  auto f = [](double x){ return 2*x + 3; };
+  REQUIRE( int1(f,2,5) == Approx( int2(f,2,5,10) ) );
+
+
 }
+
+
+}
+

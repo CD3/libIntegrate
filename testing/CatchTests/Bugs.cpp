@@ -38,14 +38,29 @@ TEST_CASE("Passing integer limits")
     _1D::RiemannRule<double> integrate;
     CHECK(integrate(f, 0, 1, 4) == Approx(1));
   }
+  SECTION("Riemann Sum Mixed")
+  {
+    _1D::RiemannRule<double> integrate;
+    CHECK(integrate(f, 0, 1., 4) == Approx(1));
+  }
   SECTION("Trapezoid Sum")
   {
     _1D::TrapezoidRule<double> integrate;
     CHECK(integrate(f, 0, 1, 4) == Approx(1));
   }
+  SECTION("Trapezoid Sum Mixed")
+  {
+    _1D::TrapezoidRule<double> integrate;
+    CHECK(integrate(f, 0, 1., 4) == Approx(1));
+  }
   SECTION("Simpson's Rule")
   {
     _1D::SimpsonRule<double> integrate;
     CHECK(integrate(f, 0, 1, 4) == Approx(1));
+  }
+  SECTION("Simpson's Rule Mixed")
+  {
+    _1D::SimpsonRule<double> integrate;
+    CHECK(integrate(f, 0., 1, 4) == Approx(1));
   }
 }
