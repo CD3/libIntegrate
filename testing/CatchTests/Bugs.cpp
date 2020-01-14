@@ -2,14 +2,13 @@
 
 #include <libIntegrate/Integrate.hpp>
 
-#include "fakeit.hpp"
 
 TEST_CASE("Passing integer limits")
 {
   // passing integer literals to integrate functions is causing
   // integrand to evaluate to zero. probably caused by integer rounding
   // that leads to dx being zero
-  auto f = [](double x) { return 1; };
+  auto f = [](double x) { x = 1;return x; };
   SECTION("Gaussian Quadrature")
   {
     SECTION("8'th Order")

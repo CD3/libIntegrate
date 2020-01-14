@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include "fakeit.hpp"
 
 #include <libIntegrate/_1D/RiemannRule.hpp>
 #include <libIntegrate/_2D/RiemannRule.hpp>

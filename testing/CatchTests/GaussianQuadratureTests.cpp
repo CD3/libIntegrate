@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include "fakeit.hpp"
 
 #include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
 #include <libIntegrate/_2D/GaussianQuadratures/GaussLegendre.hpp>
@@ -141,7 +140,7 @@ TEST_CASE( "Testing 2D GQ:64 rule on trig functions." ) {
 
   CHECK( integrate( [](double x, double y){ return sin(x)*cos(y); },
                     0., M_PI,
-                    0., M_PI ) == Approx( (-cos(M_PI)*(sin(M_PI) - sin(0)) + cos(0)*(sin(M_PI) - sin(0)) ) ) );
+                    0., M_PI )+1== Approx( 1+(-cos(M_PI)*(sin(M_PI) - sin(0)) + cos(0)*(sin(M_PI) - sin(0)) ) ) );
 
 
 }

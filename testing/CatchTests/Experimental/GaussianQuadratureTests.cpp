@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include "fakeit.hpp"
 
 #include <libIntegrate/Experimental/_1D/GaussianQuadratures/GaussLegendre.hpp>
 

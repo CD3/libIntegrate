@@ -7,15 +7,13 @@
   */
 
 
-#include "libIntegrate_version.h"
+#include "./_1D/RiemannRule.hpp"
+#include "./_1D/GaussianQuadratures/GaussLegendre.hpp"
+#include "./_1D/TrapezoidRule.hpp"
+#include "./_1D/SimpsonRule.hpp"
 
-#include "_1D/RiemannRule.hpp"
-#include "_1D/GaussianQuadratures/GaussLegendre.hpp"
-#include "_1D/TrapezoidRule.hpp"
-#include "_1D/SimpsonRule.hpp"
-
-#include "_2D/RiemannRule.hpp"
-#include "_2D/GaussianQuadratures/GaussLegendre.hpp"
+#include "./_2D/RiemannRule.hpp"
+#include "./_2D/GaussianQuadratures/GaussLegendre.hpp"
 
 #endif // include protector
 

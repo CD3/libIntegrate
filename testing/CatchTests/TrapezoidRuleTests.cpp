@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include "fakeit.hpp"
 
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
 
