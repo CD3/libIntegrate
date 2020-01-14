@@ -32,13 +32,13 @@ class GaussLegendreQuadrature_imp
     // A reverse communication version
     template<typename X>
     struct State {
-      size_t i;
-      X x;
-      X a, b;
-      X apb;
-      X amb;
-      T f;
-      T sum;
+      size_t i = 0;
+      X x = 0;
+      X a, b = 0;
+      X apb = 0;
+      X amb = 0;
+      T f = 0;
+      T sum = 0;
 
       bool initialized = false;
     };
