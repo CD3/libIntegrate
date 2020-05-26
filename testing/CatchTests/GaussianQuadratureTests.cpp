@@ -145,6 +145,26 @@ TEST_CASE( "Testing 2D GQ:64 rule on trig functions." ) {
 
 }
 
+TEST_CASE("Testing 1D GQ on Blackbody Curve")
+{
+  _1D::GQ::GaussLegendreQuadrature<double,64> integrate;
+  auto f = [](double x){
+    double h = 6.62607004e-34;
+    double c = 299792458;
+    double k = 1.38064852e-23;
+    double T = 5000;
+
+    return 2*h*c*c/x/x/x/x/x/(exp(h*c/x/k/T) - 1);
+  };
+  double T = 5000;
+  double sigma = 5.6704e-8;
+  double b = 2.897771955e-3;
+  double lmax = b/T;
+
+  CHECK( integrate(f,0.,lmax) == Approx( 0.25*sigma*T*T*T*T/M_PI ).epsilon(0.01) );
+  CHECK( integrate(f,0.,40*lmax) == Approx( sigma*T*T*T*T/M_PI ).epsilon(0.01) );
+}
+
 
 
 }

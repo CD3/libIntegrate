@@ -49,6 +49,7 @@ target_sources(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/RiemannRule.hpp>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/TrapezoidRule.hpp>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/GaussianQuadratures/GaussLegendre.hpp>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/_1D/Boost/GaussKronrod.hpp>
 )
 
 target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)

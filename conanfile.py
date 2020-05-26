@@ -3,7 +3,7 @@ import os
 
 class ConanBuild(ConanFile):
     generators = "cmake", "virtualenv"
-    requires = 'boost/1.69.0@conan/stable'
+    requires = 'boost/1.72.0'
 
 
     def build(self):

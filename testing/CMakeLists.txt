@@ -14,7 +14,8 @@ find_package(OpenMP)
 # Find all sources.
 file( GLOB_RECURSE unitTest_SOURCES
       RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-      "./CatchTests/*.cpp" )
+      "./CatchTests/*.cpp"
+      )
 message(STATUS "Detected Catch-based Unit Test Sources:")
 foreach(testSrc ${unitTest_SOURCES})
   message(STATUS "  ${testSrc}" )
