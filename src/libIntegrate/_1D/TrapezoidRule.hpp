@@ -1,5 +1,4 @@
-#ifndef _1D_TrapezoidRule_hpp
-#define _1D_TrapezoidRule_hpp
+#pragma once
 
 #include<functional>
 #include<boost/optional.hpp>
@@ -82,4 +81,3 @@ T TrapezoidRule<T,NN>::operator()( X &x, Y &y ) const
 }
 
 
-#endif // include protector

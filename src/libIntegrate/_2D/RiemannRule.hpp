@@ -1,5 +1,4 @@
-#ifndef _2D_RiemannRule_hpp
-#define _2D_RiemannRule_hpp
+#pragma once
 
 #include<functional>
 #include<boost/optional.hpp>
@@ -63,6 +62,3 @@ T RiemannRule<T>::operator()( X &x, Y &y, F &f ) const
 }
 
 }
-
-
-#endif // include protector

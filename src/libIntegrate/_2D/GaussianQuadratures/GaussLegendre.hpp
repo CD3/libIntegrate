@@ -1,5 +1,4 @@
-#ifndef _2D_GaussianQuadratures_GaussLegendreQuadrature_hpp
-#define _2D_GaussianQuadratures_GaussLegendreQuadratrue_hpp
+#pragma once
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -60,5 +59,3 @@ T GaussLegendreQuadrature<T,Order>::operator()(F f, X a, X b, Y c, Y d) const
 }
 
 }
-
-#endif // include protector

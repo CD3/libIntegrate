@@ -1,4 +1,4 @@
-#ifndef Integrate_hpp
+#pragma once
 
 /** @file Integrate.hpp
   * @brief 
@@ -14,7 +14,3 @@
 
 #include "./_2D/RiemannRule.hpp"
 #include "./_2D/GaussianQuadratures/GaussLegendre.hpp"
-
-#endif // include protector
-
-#define Integrate_hpp

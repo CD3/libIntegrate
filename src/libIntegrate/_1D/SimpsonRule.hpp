@@ -1,5 +1,4 @@
-#ifndef _1D_SimpsonRule_hpp
-#define _1D_SimpsonRule_hpp
+#pragma once
 
 #include<functional>
 
@@ -60,5 +59,3 @@ T SimpsonRule<T,NN>::operator()( F f, T a, T b ) const
 
 }
 
-
-#endif // include protector

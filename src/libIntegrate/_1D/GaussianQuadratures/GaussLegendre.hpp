@@ -1,5 +1,4 @@
-#ifndef _1D_GaussianQuadratures_GaussLegendreQuadrature_hpp
-#define _1D_GaussianQuadratures_GaussLegendreQuadratrue_hpp
+#pragma once
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -389,4 +388,3 @@ class GaussLegendreQuadrature<T,64> : public detail::GaussLegendreQuadrature_imp
 }
 }
 
-#endif // include protector
