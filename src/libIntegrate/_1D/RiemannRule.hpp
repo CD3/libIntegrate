@@ -1,7 +1,6 @@
 #pragma once
 
-#include<functional>
-#include<boost/optional.hpp>
+#include<type_traits>
 
 namespace _1D {
 

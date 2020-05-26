@@ -1,8 +1,5 @@
 #pragma once
 
-#include<functional>
-#include<boost/optional.hpp>
-
 namespace _2D {
 
 /** @class 
