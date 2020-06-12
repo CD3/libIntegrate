@@ -7,6 +7,7 @@
   */
 
 #include<array>
+#include "../../_1D/GaussianQuadratures/GaussLegendre.hpp"
 
 namespace _2D {
 namespace GQ {
