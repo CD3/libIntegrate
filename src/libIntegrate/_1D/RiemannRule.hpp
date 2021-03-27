@@ -14,10 +14,11 @@ class RiemannRule
   public:
     RiemannRule() = default;
 
-    // This version will integrate a callable between two points
+    // This version will integrate a callable between two points using a number of evaluations set at run-time
     template<typename F, size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_==0)>::type>
     T operator()( F f, T a, T b, size_t N ) const;
 
+    // This version will integrate a callable between two points using a number of evaluation set at compile-time 
     template<typename F, size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_>0)>::type>
     T operator()( F f, T a, T b) const;
 
