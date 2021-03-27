@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 #include <type_traits>
 
@@ -8,26 +9,26 @@ namespace _1D {
   * @brief A class that implements Simposon's rule.
   * @author C.D. Clark III
   */
-template<typename T, size_t NN = 0>
+template<typename T, std::size_t NN = 0>
 class SimpsonRule
 {
   public:
     SimpsonRule() = default;
 
     // This version will integrate a callable between two points
-    template<typename F, size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_==0)>::type>
-    T operator()( F f, T a, T b, size_t N ) const;
+    template<typename F, std::size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_==0)>::type>
+    T operator()( F f, T a, T b, std::size_t N ) const;
 
-    template<typename F, size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_>0)>::type>
+    template<typename F, std::size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_>0)>::type>
     T operator()( F f, T a, T b) const;
 
   protected:
 };
 
 
-template<typename T, size_t NN>
-template<typename F, size_t NN_, typename SFINAE>
-T SimpsonRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
+template<typename T, std::size_t NN>
+template<typename F, std::size_t NN_, typename SFINAE>
+T SimpsonRule<T,NN>::operator()( F f, T a, T b, std::size_t N ) const
 {
   T sum = 0;
   T dx = static_cast<T>(b-a)/N; // size of each interval
@@ -41,8 +42,8 @@ T SimpsonRule<T,NN>::operator()( F f, T a, T b, size_t N ) const
   return sum;
 }
 
-template<typename T, size_t NN>
-template<typename F, size_t NN_, typename SFINAE>
+template<typename T, std::size_t NN>
+template<typename F, std::size_t NN_, typename SFINAE>
 T SimpsonRule<T,NN>::operator()( F f, T a, T b ) const
 {
   T sum = 0;

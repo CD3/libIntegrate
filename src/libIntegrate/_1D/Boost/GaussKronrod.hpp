@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 /** @file GaussKronrod.hpp
  * @brief
@@ -15,7 +16,7 @@ namespace Boost
   /**
    * A wrapper around the Boost.Math gauss_kronrob function
    */
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 class GaussKronrodQuadrature{
   public:
     

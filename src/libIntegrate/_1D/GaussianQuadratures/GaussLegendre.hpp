@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -21,13 +22,13 @@ class GaussLegendreQuadrature_imp
 
     template<typename T>
     struct GetType{ };
-    template<template <typename,size_t> class Class, typename T, size_t Order>
+    template<template <typename,std::size_t> class Class, typename T, std::size_t Order>
     struct GetType<Class<T,Order>> { using type = T; };
 
     template<typename T>
     struct GetOrder{ };
-    template<template <typename,size_t> class Class, typename T, size_t Order>
-    struct GetOrder<Class<T,Order>> { static const size_t value = Order; };
+    template<template <typename,std::size_t> class Class, typename T, std::size_t Order>
+    struct GetOrder<Class<T,Order>> { static const std::size_t value = Order; };
 
     // This version will integrate a callable between two points
     template<typename F, typename X>
@@ -42,7 +43,7 @@ class GaussLegendreQuadrature_imp
       T amb = static_cast<T>(b - a)/2;
 
       typename GetType<Derived>::type sum = 0;
-      for(size_t i = 0; i < GetOrder<Derived>::value; i++)
+      for(std::size_t i = 0; i < GetOrder<Derived>::value; i++)
         sum += w[i]*f( apb + amb*x[i] );
       sum *= amb;
 
@@ -63,7 +64,7 @@ class GaussLegendreQuadrature_imp
   * to the weight and abscissa. The function should create and return static arrays so that
   * these arrays are only created once for each order.
   */
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 class GaussLegendreQuadrature
 {
 };

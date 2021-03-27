@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 namespace _2D {
 
@@ -14,7 +15,7 @@ class RiemannRule
 
     // This version will integrate a callable between four points
     template<typename F, typename X>
-    T operator()( F f, X xa, X xb, size_t xN, X ya, X yb, size_t yN ) const;
+    T operator()( F f, X xa, X xb, std::size_t xN, X ya, X yb, std::size_t yN ) const;
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y, typename F>
@@ -26,16 +27,16 @@ class RiemannRule
 
 template<typename T>
 template<typename F, typename X>
-T RiemannRule<T>::operator()( F f, X xa, X xb, size_t xN, X ya, X yb, size_t yN ) const
+T RiemannRule<T>::operator()( F f, X xa, X xb, std::size_t xN, X ya, X yb, std::size_t yN ) const
 {
   T sum = 0;
   X dx = (xb-xa)/xN; // make sure we don't get integer rounding
   X dy = (yb-ya)/yN; // make sure we don't get integer rounding
   X y = ya;
-  for(size_t i = 0; i < xN; i++)
+  for(std::size_t i = 0; i < xN; i++)
   {
     X x = xa;
-    for(size_t j = 0; j < yN; j++)
+    for(std::size_t j = 0; j < yN; j++)
     {
       sum += f(x,y);
       x += dx;
@@ -51,7 +52,7 @@ template<typename X, typename Y, typename F>
 T RiemannRule<T>::operator()( X &x, Y &y, F &f ) const
 {
   T sum = 0;
-  for(size_t i = 0; i < x.size()-1; i++)
+  for(std::size_t i = 0; i < x.size()-1; i++)
     for(int j = 0; j < y.size()-1; j++)
       sum += f[i][j]*(x[i+1]-x[i])*(y[j+1]-y[j]);
 

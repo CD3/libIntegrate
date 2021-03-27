@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -13,7 +14,7 @@ namespace _1D {
 namespace GQ {
 
 namespace detail {
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 class GaussLegendreQuadrature_imp
 {
   protected:
@@ -31,7 +32,7 @@ class GaussLegendreQuadrature_imp
     // A reverse communication version
     template<typename X>
     struct State {
-      size_t i = 0;
+      std::size_t i = 0;
       X x = 0;
       X a, b = 0;
       X apb = 0;
@@ -51,7 +52,7 @@ class GaussLegendreQuadrature_imp
 };
 
 
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 template<typename F, typename X>
 T GaussLegendreQuadrature_imp<T,Order>::operator()(F f, X a, X b) const
 {
@@ -66,7 +67,7 @@ T GaussLegendreQuadrature_imp<T,Order>::operator()(F f, X a, X b) const
   return sum;
 }
 
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 template<typename X>
 T GaussLegendreQuadrature_imp<T,Order>::operator()(X a, X b, State<X>& state) const
 {
@@ -104,7 +105,7 @@ T GaussLegendreQuadrature_imp<T,Order>::operator()(X a, X b, State<X>& state) co
   * @brief 
   * @author C.D. Clark III
   */
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 class GaussLegendreQuadrature 
 {
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include<cstddef>
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -12,7 +13,7 @@
 namespace _2D {
 namespace GQ {
 
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 class GaussLegendreQuadrature
 {
   public:
@@ -28,7 +29,7 @@ class GaussLegendreQuadrature
 };
 
 
-template<typename T, size_t Order>
+template<typename T, std::size_t Order>
 template<typename F, typename X, typename Y>
 T GaussLegendreQuadrature<T,Order>::operator()(F f, X a, X b, Y c, Y d) const
 {
@@ -45,12 +46,12 @@ T GaussLegendreQuadrature<T,Order>::operator()(F f, X a, X b, Y c, Y d) const
   std::array<T, Order> sums;
 
   #pragma parallel for
-  for(size_t i = 0; i < Order; i++)
+  for(std::size_t i = 0; i < Order; i++)
     sums[i] = _1dInt( [&](Y y){ return f(apb + amb*_1dInt.getX()[i], y); }, c, d );
 
   // now integrate over x
   T sum = 0;
-  for(size_t i = 0; i < Order; i++)
+  for(std::size_t i = 0; i < Order; i++)
     sum += _1dInt.getW()[i]*sums[i];
   sum *= amb;
 
