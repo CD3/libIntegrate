@@ -157,11 +157,11 @@ CHECK(integrate([](double x){ return x*x*probability_density(x);}, 0, 10) == App
 CHECK(integrate([](double x){ return (x-1./2)*(x-1./2)*probability_density(x);}, 0, 10) == Approx(1./4));
 ```
 
-For Case 2, a lambda function cannot be used because the integrator will make calls to the subscript operator. We could computed the weighted integrand and store
-the result in another vector, but if will only be used one, the memory allocation may be too expensive.
+For Case 2, a lambda function cannot be used because the integrator will make calls to the subscript operator. We could compute the weighted integrand and store
+the result in another vector, but if will it only be used one, the memory allocation may be too expensive.
 The library provides a class `SubscriptLambdaObj<T>` for this.
 The helper function `SubscriptLambda(...)` is used to create an instance that wraps a lambda function and provides a subscript operator.
-The lambda function can then capture any other data that is needed to compute the integrate, for example other vectors. Note that these should be captured by *reference*, or
+The lambda function can then capture any other data that is needed to compute the integrand, for example other vectors. Note that these should be captured by *reference*, or
 else they will be copied when creating the `SubscriptLambdaObj<T>` instance.
 
 ```
