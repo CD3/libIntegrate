@@ -1,16 +1,29 @@
 # C++ library for numerical integration
 
-`libIntegrate` is a collection of algorithms for doing numerical integration.
+`libIntegrate` is a collection of algorithms for doing numerical integration, including discretized data.
 
 # Description
 
-When writing numerical simulations, one often needs to integrate some function, or an approximation of some function.
-This library implements several common integration algorithms in C++. It is not
-as sophisticated (actually, its not very sophisticated at all), or complete
-(actually, its not very complete at all), as the Gnu Scientific Library
+Most libraries for numerical integration provide routines for integrating functions that can be *evaluated*, but not
+for functions that have already been *discretized*. Often, when doing physics simulations, one needs to integrate functions
+that cannot be evaluated at arbitrary points, but for which the function values are known at some discrete set of points. For example,
+we might use a finite-difference method to solve Schrodinger's equation and compute the time-evolution of a wavefunction describing some system.
+If we then want to compute probabilities, we will need to integrate the wavefunction (actually, we will need to integrate the modulus squared of the wavefunction).
+
+The usual methods for numerical integration are not suitable for this. This library provides methods that are.
+
+While this library does provide methods for integrating functions that can be evaluated too, they are not nearly as
+as sophisticated (actually, not very sophisticated at all), or complete
+(actually, not very complete at all), as the Gnu Scientific Library
 (https://www.gnu.org/software/gsl/), Numerical Recipes
-(http://numerical.recipes/), or QUADPACK (http://www.netlib.org/quadpack/), but
-it is released under a permissive license, and you are free to do whatever you
+(http://numerical.recipes/), QUADPACK (http://www.netlib.org/quadpack/),
+or Boost (https://www.boost.org/doc/libs/1_75_0/libs/math/doc/html/quadrature.html).
+If you need to integrate a known function with some requirement on accuracy,
+you should use one of these libraries instead.
+
+If you need to integrate **discretized data** and occasionally some simple functions that can
+be evaluated, this library may be for you.
+It is released under a permissive license, so you are free to do whatever you
 want with it.
 
 Methods currently implemented include (but are not limited to):
@@ -18,11 +31,23 @@ Methods currently implemented include (but are not limited to):
 - 1D
     - Riemann sum (the one that every undergrad physics major writes)
     - Trapezoid rule
-    - Simpson's rule
+    - Simpson's rule (1/3)
     - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
 - 2D
     - Riemann sum
     - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
+
+Note that the library depends on Boost, and does provide some (incomplete) wrappers to the Boost.Math quadrature functions.
+
+Features:
+
+- Integrate discrete data, with Riemann, Trapezoid, and Simpson rules.
+- Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
+- Templated methods work on any vector-like data structure. The methods will call `.size()` and `operator[](int)` (the subscript operator).
+- Support for non-uniform discretized data.
+- Apply lazy transformations to discrete data before integrating with subscript lambdas (a lambda function-like object that provides a subscript operator).
+
+
 
 # Usage
 

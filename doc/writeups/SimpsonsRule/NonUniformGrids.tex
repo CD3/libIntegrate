@@ -1,0 +1,98 @@
+% arara: pdflatex
+% arara: pdflatex
+
+\documentclass[letterpaper,10pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{physics}
+\usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+
+\begin{document}
+
+\section{Introduction}
+
+Simpson's rule is a method for performing numerical integration. While there are several different approximations under the name ``Simpson's rule'', the most
+common version, Simpson's 1/3 rule, is equivalent fitting a 2'nd degree polynomial to three points so that the integration can be carried out analytically.
+It is usually written as:
+\begin{equation}
+  \label{eq:simpsons}
+  \int_a^b f(x) \dd x \approx \frac{b-a}{6}\left[ f(a) + 4f\qty(\frac{a+b}{2}) + f(b)\right]
+\end{equation}
+This can be extended to larger domains with more function evaluations by breaking the domain into sub-domains and applying
+\ref{eq:simpsons} to each.
+However, equation \ref{eq:simpsons} assumes that the function $f(x)$ is evaluated at equally spaced points. If we have a discretized
+function that is \emph{not} evaluated at equally spaced points, equation \ref{eq:simpsons} cannot be used.
+
+\section{Generalizing to Non-Uniform Spacing}
+
+To generalize equation \ref{eq:simpsons} to non-equally spaced points, we just need to perform the polynomial fit using non-equally spaced points an
+perform the integration on the new fit. Using Lagrange polynomial interpolation, we have
+\begin{equation}
+  f(x) \approx f(x_1) \frac{ (x-x_2)(x-x_3) }{ (x_1 - x_2)(x_1 - x_3) }
+             + f(x_2) \frac{ (x-x_1)(x-x_3) }{ (x_2 - x_1)(x_2 - x_3) }
+             + f(x_3) \frac{ (x-x_1)(x-x_2) }{ (x_3 - x_1)(x_3 - x_2) }
+\end{equation}
+where $x_1$, $x_2$, and $x_3$ are the points at which the function is evaluated.
+
+The Lagrange basis polynomials can be written as
+\begin{equation}
+  \label{eq:lagrange}
+  l(x,A,B,C) = \frac{(x-A)(x-B)}{(C-A)(C-B)}
+\end{equation}
+and we can rewrite the interpolation as
+\begin{equation}
+  f(x) \approx
+    f(x_1) l(x,x_2,x_3,x_1)
+  + f(x_2) l(x,x_1,x_3,x_2)
+  + f(x_3) l(x,x_1,x_2,x_3)
+\end{equation}
+
+\subsection{Method 1: Integrating the Lagrange polynomials directly}
+Integrating the Lagrrange basis polynomials from $a$ to $b$ gives
+\begin{equation}
+  L(A,B,C,a,b) = \int_a^b l(x,A,B,C) \dd x = \frac{1}{(C-A)(C-B)} \left[ \frac{1}{3} \qty(b^3 - a^3) + \frac{A+B}{2}\qty(b^2 - a^2) + AB(b-a)  \right]
+\end{equation}
+and the integral of $f(x)$ is then approximated as
+\begin{equation}
+  \int_a^b f(x) \dd x \approx
+    f(x_1) L(x_2,x_3,x_1,a,b)
+  + f(x_2) L(x_1,x_3,x_2,a,b)
+  + f(x_3) L(x_1,x_2,x_3,a,b)
+\end{equation}
+
+To reproduce equation \ref{eq:simpsons}, we let $x_1 = a$, $x_2 = \frac{a+b}{2}$, and $x_3 = b$. For example,
+\begin{align}
+  L(x_2,x_3,x_1,a,b) = \frac{1}{(a-\frac{a+b}{2})(a-b)} \qty[\frac{1}{3} \qty(b^3 - a^3) + \frac{\frac{a+b}{2} + b}{2}\qty(b^2 - a^2) + \frac{a+b}{2}b\qty(b-a) ]
+\end{align}
+apparently reduces to $\frac{b-a}{6}$...
+
+
+\subsection{Method 2: Integrating the Lagrange polynomials by parts}
+
+Integrating the Lagrange polynomials by parts gives
+\begin{align}
+  L(A,B,C,a,b) &= \int_a^b l(x,A,B,C) \dd x = \frac{1}{(C-A)(C-B)} \int_a^b (x - A)(x - B) \dd x  \\
+  \dv{x} \qty[\frac{1}{2}(x-A)(x-B)^2] &= \frac{1}{2}(x - B)^2 + (x-A)(x-B) \\
+  \int (x-A)(x-B) \dd x &= \frac{1}{2}(x-A)(x-B)^2 - \frac{1}{2} \int (x-B)^2 \dd x \\
+  L(A,B,C,a,b) &= \left. \frac{1}{(C-A)(C-B)} \qty[ \frac{1}{2}(x-A)(x-B)^2 - \frac{1}{6} (x-B)^3] \right|_a^b
+\end{align}
+
+\subsection{Interpolating to uniform spacing}
+
+Since Simpon's rule is derived by interpolating a function with a polynomial and integrating, we can use the polynomial to interpolate to the
+medpoint of $[a,b]$ and just use the usual formula. Given the function at points $x_1$, $x_2$, and $x_3$, the interpolated function value at $\frac{x_1 + x_2}{2}$ is
+\begin{equation}
+  f\qty(\frac{x_1 + x_3}{2}) \approx 
+  f(x_1) l( \frac{x_1+x_2}{2}, x_2,x_3,x_1)
+  + f(x_2) l( \frac{x_1+x_2}{2}, x_1,x_3,x_2)
+  + f(x_3) l( \frac{x_1+x_2}{2}, x_1,x_2,x_3)
+\end{equation}
+Once we interpolate to the midpoint, we can use equation \ref{eq:simpsons}.
+
+
+
+\end{document}
+

@@ -1,0 +1,153 @@
+31 Mar 2021 17:29:56.063 INFO  - Welcome to arara 4.0 (revision 2)!
+31 Mar 2021 17:29:56.065 INFO  - -----------------------------------------------------------------
+31 Mar 2021 17:29:56.068 INFO  - ::: arara @ /usr/share/texlive/texmf-dist/scripts/arara
+31 Mar 2021 17:29:56.068 INFO  - ::: Java 11.0.10, Ubuntu
+31 Mar 2021 17:29:56.068 INFO  - ::: /usr/lib/jvm/java-11-openjdk-amd64
+31 Mar 2021 17:29:56.068 INFO  - ::: Linux, amd64, 5.8.0-44-generic
+31 Mar 2021 17:29:56.068 INFO  - ::: user.home @ /home/cclark
+31 Mar 2021 17:29:56.068 INFO  - ::: user.dir @ /home/cclark/Code/sync/projects/libIntegrate/doc/writeups/SimpsonsRule
+31 Mar 2021 17:29:56.068 INFO  - ::: CF @ [none]
+31 Mar 2021 17:29:56.068 INFO  - -----------------------------------------------------------------
+31 Mar 2021 17:29:56.068 INFO  - Processing 'NonUniformGrids.tex' (size: 3 KB, last modified: 03/31/2021 17:29:55), please wait.
+31 Mar 2021 17:29:56.073 INFO  - I found a potential pattern in line 1: pdflatex
+31 Mar 2021 17:29:56.074 INFO  - I found a potential pattern in line 2: pdflatex
+31 Mar 2021 17:29:56.076 INFO  - I found a potential directive: Directive: { identifier: pdflatex, parameters: {}, conditional: { NONE }, lines: [1] }
+31 Mar 2021 17:29:56.077 INFO  - I found a potential directive: Directive: { identifier: pdflatex, parameters: {}, conditional: { NONE }, lines: [2] }
+31 Mar 2021 17:29:56.077 INFO  - All directives were validated. We are good to go.
+31 Mar 2021 17:29:56.077 INFO  - -------------------------- DIRECTIVES ---------------------------
+31 Mar 2021 17:29:56.077 INFO  - Directive: { identifier: pdflatex, parameters: {reference=/home/cclark/Code/sync/projects/libIntegrate/doc/writeups/SimpsonsRule/NonUniformGrids.tex, file=NonUniformGrids.tex}, conditional: { NONE }, lines: [1] }
+31 Mar 2021 17:29:56.077 INFO  - Directive: { identifier: pdflatex, parameters: {reference=/home/cclark/Code/sync/projects/libIntegrate/doc/writeups/SimpsonsRule/NonUniformGrids.tex, file=NonUniformGrids.tex}, conditional: { NONE }, lines: [2] }
+31 Mar 2021 17:29:56.077 INFO  - -----------------------------------------------------------------
+31 Mar 2021 17:29:56.078 INFO  - I am ready to interpret rule 'pdflatex'.
+31 Mar 2021 17:29:56.079 INFO  - Rule location: '/usr/share/texlive/texmf-dist/scripts/arara/rules'
+31 Mar 2021 17:29:56.206 INFO  - I am ready to interpret task 'PDFLaTeX engine' from rule 'PDFLaTeX'.
+31 Mar 2021 17:29:56.207 INFO  - System command: [ pdflatex, NonUniformGrids.tex ]
+31 Mar 2021 17:29:56.425 INFO  - ---------------------- BEGIN OUTPUT BUFFER ----------------------
+31 Mar 2021 17:29:56.426 INFO  - This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./NonUniformGrids.tex
+LaTeX2e <2020-02-02> patch level 2
+L3 programming layer <2020-02-14>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def)))
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def))
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/physics/physics.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty)))
+(./NonUniformGrids.aux)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-basic-dictionary
+-English.dict)
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd) [1{/var/lib/texmf/fo
+nts/map/pdftex/updmap/pdftex.map}] [2] (./NonUniformGrids.aux) )</usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on NonUniformGrids.pdf (2 pages, 102195 bytes).
+Transcript written on NonUniformGrids.log.
+
+31 Mar 2021 17:29:56.426 INFO  - ----------------------- END OUTPUT BUFFER -----------------------
+31 Mar 2021 17:29:56.432 INFO  - Task result: SUCCESS
+31 Mar 2021 17:29:56.433 INFO  - I am ready to interpret rule 'pdflatex'.
+31 Mar 2021 17:29:56.433 INFO  - Rule location: '/usr/share/texlive/texmf-dist/scripts/arara/rules'
+31 Mar 2021 17:29:56.448 INFO  - I am ready to interpret task 'PDFLaTeX engine' from rule 'PDFLaTeX'.
+31 Mar 2021 17:29:56.448 INFO  - System command: [ pdflatex, NonUniformGrids.tex ]
+31 Mar 2021 17:29:56.653 INFO  - ---------------------- BEGIN OUTPUT BUFFER ----------------------
+31 Mar 2021 17:29:56.653 INFO  - This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./NonUniformGrids.tex
+LaTeX2e <2020-02-02> patch level 2
+L3 programming layer <2020-02-14>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def)))
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def))
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/physics/physics.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty)))
+(./NonUniformGrids.aux)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
+(/usr/share/texlive/texmf-dist/tex/latex/translator/translator-basic-dictionary
+-English.dict)
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd) [1{/var/lib/texmf/fo
+nts/map/pdftex/updmap/pdftex.map}] [2] (./NonUniformGrids.aux) )</usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on NonUniformGrids.pdf (2 pages, 102195 bytes).
+Transcript written on NonUniformGrids.log.
+
+31 Mar 2021 17:29:56.654 INFO  - ----------------------- END OUTPUT BUFFER -----------------------
+31 Mar 2021 17:29:56.654 INFO  - Task result: SUCCESS
+31 Mar 2021 17:29:56.658 INFO  - Total: 0.58 seconds
