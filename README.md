@@ -39,7 +39,7 @@ Methods currently implemented include (but are not limited to):
 
 Note that the library depends on Boost, and does provide some (incomplete) wrappers to the Boost.Math quadrature functions.
 
-Features:
+**Features:**
 
 - Integrate discrete data, with Riemann, Trapezoid, and Simpson rules.
 - Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
@@ -57,7 +57,12 @@ Features:
 There are two basic types of numerical integration. In the first case, the value
 of the function to be integrated can be calculated for any argument value. In the second
 case, the value of the function to be integrated is only know at some discrete set
-of argument values. Any method that can handle the second case can be used to handle
+of argument values. Most numerical integration libraries handle the first case, and
+there many different methods for handling a wide variety of conditions, including integrating over infinite or semi-infinite bounds.
+Typically, the user should know something about the function to be integrated and carefully select
+the best method to use.
+
+Any method that can handle the second case can be used to handle
 the first case as well by first discrediting the function to be integrated.
 Methods that can only handle the first case (for example, Gauss-Legendre Quadrature
 requires the function to be evaluated at specific argument values) can be used on discretized
@@ -65,6 +70,8 @@ functions, but require the discretized function to be interpolated to the argume
 The [libInterpolate](https://github.com/CD3/libInterpolate) library is useful for this.
 
 ## Examples
+
+### Case 1: Functions that can be evaluated
 
 Integration methods are implemented as separate classes that implement `operator()` (i.e. instances
 can be called like functions). All classed in `libIntegrate` support Case 1, integrating
@@ -112,6 +119,7 @@ CHECK( integrate( f, 0., 1. )  == Approx( 1 + 1/2. + 1/3. + 1/4. - 1 ) );
 
 ```
 
+### Case 2: Discretized functions
 
 Some classes in `libIntegrate` support Case 2, integrating a discretized function. These classes implement
 an `operator()` overload that takes two vector-like arguments containing the argument and function values.
@@ -264,7 +272,10 @@ class SimpsonRule
     // This version will integrate a callable between two points
     template<typename F>
     T operator()( F f, T a, T b, size_t N ) const;
-    // Integrating a set of discrete points is not supported
+    
+    // This version will integrate a set of discrete points
+    template<typename X, typename Y>
+    T operator()( X &x, Y &y ) const;
 };
 }
 ```
@@ -283,6 +294,32 @@ class GaussLegendreQuadrature
     template<typename F, typename X>
     T operator()( F f, X a, X b ) const;
     // Integrating a set of discrete points is not supported
+};
+}
+}
+```
+
+### Gaussian-Kronrod Quadrature
+
+The library also provides wrappers for some of the Boost.Math Quadrature routines. The Boost routines are implemented
+as free functions. These wrappers simply provide an object-oriented interface.
+
+```cpp
+namespace _1D {
+namespace Boost {
+  /**
+   * A wrapper around the Boost.Math gauss_kronrob function
+   */
+template<typename T>
+class GaussKronrodQuadrature{
+  public:
+    
+    template<typename F, typename X>
+    auto operator()(F f, X a, X b, unsigned max_depth, T tol, T* error, T* pL1) const -> T
+
+    template<typename F, typename X>
+    auto operator()(F f, X a, X b) const -> T
+
 };
 }
 }
