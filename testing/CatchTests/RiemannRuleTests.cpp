@@ -52,6 +52,9 @@ TEST_CASE( "Testing 1D Riemann rule on box functions." ) {
 
 TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
+  SECTION("Two vector version")
+  {
+
   _1D::RiemannRule<double> integrate;
   double I;
 
@@ -63,6 +66,29 @@ TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
   I = integrate( x, y );
   REQUIRE( I == Approx( 3 ) );
+  }
+
+  SECTION("Single vector version")
+  {
+
+  _1D::RiemannRule<double> integrate;
+  double I;
+
+  std::vector<double> y(3);
+  y[0] = 1;
+  y[1] = 2;
+  y[2] = 3;
+  
+
+  I = integrate( y );
+  REQUIRE( I == Approx( 6 ) );
+
+  I = integrate( y, 2 );
+  REQUIRE( I == Approx( 12 ) );
+
+  I = integrate( y, -2 );
+  REQUIRE( I == Approx( -12 ) );
+  }
 
 }
 
