@@ -61,26 +61,43 @@ TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
 
   _1D::TrapezoidRule<double> integrate;
   double I;
-
+  SECTION("Two vector data")
+  {
   std::vector<double> x(3),y(3);
   x[0] = 0; y[0] = 1;
-  x[1] = 1; y[1] = 2;
+  x[1] = 0.5; y[1] = 1.5;
   x[2] = 2; y[2] = 3;
   
 
   I = integrate( x, y );
   REQUIRE( I == Approx( 4 ) );
+  }
+
+  SECTION("Single vector data")
+  {
+  std::vector<double> y(3);
+  y[0] = 1;
+  y[1] = 2;
+  y[2] = 3;
+  
+  I = integrate( y );
+  REQUIRE( I == Approx( 4 ) );
+  I = integrate( y, 0.5 );
+  REQUIRE( I == Approx( 2 ) );
+  I = integrate( y, -0.5 );
+  REQUIRE( I == Approx( -2 ) );
+  }
 
 }
 
 TEST_CASE( "Testing 1D Trapezoid rule with static interval number." ) {
 
-  //_1D::TrapezoidRule<double,10> integrate;
-  //double I;
+  _1D::TrapezoidRule<double,10> integrate;
+  double I;
 
-  //auto f = [](double x){ return 2*x + 3; };
-  //I = integrate( f, 2, 5 );
-  //REQUIRE( I == Approx( f(2)*1.5 + f(3.5)*1.5 ) );
+  auto f = [](double x){ return 2*x + 3; };
+  I = integrate( f, 2, 5 );
+  REQUIRE( I == Approx( 5*5 + 3*5 - 2*2 - 3*2 ) );
 
 
 }

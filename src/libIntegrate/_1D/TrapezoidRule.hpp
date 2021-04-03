@@ -1,5 +1,6 @@
 #pragma once
 #include<cstddef>
+#include<iostream>
 
 #include<type_traits>
 
@@ -24,7 +25,27 @@ class TrapezoidRule
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    T operator()( X &x, Y &y ) const;
+    auto operator()( const X &x, const Y &y ) const -> decltype(x.size(),x[0],y[0],T())
+    {
+      T sum = 0;
+      for(std::size_t i = 0; i < x.size()-1; i++)
+        sum += (y[i+1]+y[i])*(x[i+1]-x[i]);
+      sum *= 0.5;
+
+      return sum;
+    }
+
+    // This version will integrate a set of discrete points that are equally spaced
+    template<typename Y>
+    auto operator()( const Y &y, T dx = 1 ) const -> decltype(y.size(),dx*y[0],T())
+    {
+      T sum = 0;
+      for(std::size_t i = 0; i < y.size()-1; i++)
+        sum += (y[i+1]+y[i]);
+      sum *= 0.5*dx;
+
+      return sum;
+    }
 
   protected:
 };
@@ -42,8 +63,8 @@ T TrapezoidRule<T,NN>::operator()( F f, T a, T b, std::size_t N ) const
 {
   T sum = 0;
   T dx = static_cast<T>(b-a)/N; // NOTE: N is the number of sub-intervals here
-  T x;
-  for(x = a; x < b; x += dx)
+  T x = a;
+  for(std::size_t i = 0; i < N; ++i, x += dx)
   {
     sum += f(x) + f(x + dx);
   }
@@ -57,24 +78,12 @@ T TrapezoidRule<T,NN>::operator()( F f, T a, T b ) const
 {
   T sum = 0;
   T dx = static_cast<T>(b-a)/NN; // NOTE: N is the number of sub-intervals here
-  T x;
-  for(x = a; x < b; x += dx)
+  T x = a;
+  for(std::size_t i = 0; i < NN; ++i, x += dx)
   {
     sum += f(x) + f(x + dx);
   }
   sum *= 0.5*dx;
-  return sum;
-}
-
-template<typename T, std::size_t NN>
-template<typename X, typename Y>
-T TrapezoidRule<T,NN>::operator()( X &x, Y &y ) const
-{
-  T sum = 0;
-  for(std::size_t i = 0; i < x.size()-1; i++)
-    sum += (y[i+1]+y[i])*(x[i+1]-x[i]);
-  sum *= 0.5;
-
   return sum;
 }
 
