@@ -1,6 +1,6 @@
 # C++ library for numerical integration
 
-`libIntegrate` is a collection of algorithms for doing numerical integration, including discretized data.
+`libIntegrate` is a collection of algorithms for doing numerical integration, **including discretized data**.
 
 # Description
 
@@ -11,6 +11,17 @@ we might use a finite-difference method to solve Schrodinger's equation and comp
 If we then want to compute probabilities, we will need to integrate the wavefunction (actually, we will need to integrate the modulus squared of the wavefunction).
 
 The usual methods for numerical integration are not suitable for this. This library provides methods that are.
+
+If the function you need to integrate is already discretized, there are not many options to choose from. There is the Riemann sum, the Trapezoid rule, and
+perhaps Simpson's rule. Each of these methods basically interpolate the function over some interval and use the integral of the interpolating function to estimate
+the integral of the data. Riemann sum uses a constant (zero'th order polynomial), the Trapezoid rule uses a linear function (first order polynomial), and the 1/3 Simpson's rule
+uses a quadratic (second degree polynomial). Higher-order interpolating functions are of course possible, but may not be appropriate, just as fitting high order polynomials
+to data sets is usually not appropriate.
+
+Quickly writing a Riemann sum loop to compute the integral of some discretized function is pretty easy. Writing the Trapezoid rule isn't difficult either, but you need to be careful not
+to index out of range at the end of the loop. Simpson's rule is simple enough for uniform data, but again requires care at the end of the loop. For non-uniform data, it is a bit more involved.
+I noticed that, when needing to integrate some discretized function, I would often just use a Riemann sum and say to myself "I'll come back and use a better method this after I get it working", but 
+then wouldn't. So this library was created to make using "better" methods on discretized data easy.
 
 While this library does provide methods for integrating functions that can be evaluated too, they are not nearly as
 as sophisticated (actually, not very sophisticated at all), or complete
