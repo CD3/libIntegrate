@@ -114,7 +114,7 @@ TEST_CASE( "Testing 1D Trapezoid rule with static interval number." ) {
 
 }
 
-TEST_CASE("Trapezoid Rule Benchmarks","[.][benchmarks]")
+TEST_CASE("Trapezoid Rule Benchmarks","[benchmarks]")
 {
   int N = 1000;
   std::vector<double> x(N),y(N);
@@ -126,6 +126,15 @@ TEST_CASE("Trapezoid Rule Benchmarks","[.][benchmarks]")
   BENCHMARK("1000 element vectors of double")
   {
     return integrate(x,y);
+  };
+
+  BENCHMARK("1000 element vectors of double 'by hand'")
+  {
+    double sum = 0;
+    for(std::size_t i = 0; i < x.size()-1; ++i)
+      sum += (x[i+1]-x[i])*(y[i+1]+y[i]);
+    sum *= 0.5;
+    return sum;
   };
 
 
