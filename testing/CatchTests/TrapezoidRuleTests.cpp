@@ -1,5 +1,7 @@
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 
+#include <numeric>
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
 
 namespace TrapeziodRuleTests
@@ -61,31 +63,39 @@ TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
 
   _1D::TrapezoidRule<double> integrate;
   double I;
-  SECTION("Two vector data")
-  {
+
   std::vector<double> x(3),y(3);
   x[0] = 0; y[0] = 1;
   x[1] = 0.5; y[1] = 1.5;
   x[2] = 2; y[2] = 3;
-  
 
-  I = integrate( x, y );
-  REQUIRE( I == Approx( 4 ) );
+  SECTION("Two vector data")
+  {
+    I = integrate( x, y );
+    REQUIRE( I == Approx( 4 ) );
   }
 
   SECTION("Single vector data")
   {
-  std::vector<double> y(3);
-  y[0] = 1;
-  y[1] = 2;
-  y[2] = 3;
+    y[0] = 1;
+    y[1] = 2;
+    y[2] = 3;
   
-  I = integrate( y );
-  REQUIRE( I == Approx( 4 ) );
-  I = integrate( y, 0.5 );
-  REQUIRE( I == Approx( 2 ) );
-  I = integrate( y, -0.5 );
-  REQUIRE( I == Approx( -2 ) );
+    I = integrate( y );
+    REQUIRE( I == Approx( 4 ) );
+    I = integrate( y, 0.5 );
+    REQUIRE( I == Approx( 2 ) );
+    I = integrate( y, -0.5 );
+    REQUIRE( I == Approx( -2 ) );
+  }
+
+  SECTION("Lambda function tranform")
+  {
+    I = integrate( x, [](int i){return 0;} );
+    REQUIRE( I == Approx( 0 ).scale(1) );
+    I = integrate( x, [&x](int i){return x[i]+1;} );
+    REQUIRE( I == Approx( 4 ) );
+
   }
 
 }
@@ -101,5 +111,22 @@ TEST_CASE( "Testing 1D Trapezoid rule with static interval number." ) {
 
 
 }
+
+}
+
+TEST_CASE("Trapezoid Rule Benchmarks","[.][benchmarks]")
+{
+  int N = 1000;
+  std::vector<double> x(N),y(N);
+  std::iota(x.begin(), x.end(), 0);
+  std::transform(x.begin(), x.end(), y.begin(), [](double x){return 2*x + 1;});
+
+  _1D::TrapezoidRule<double> integrate;
+
+  BENCHMARK("1000 element vectors of double")
+  {
+    return integrate(x,y);
+  };
+
 
 }

@@ -52,9 +52,6 @@ TEST_CASE( "Testing 1D Riemann rule on box functions." ) {
 
 TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
-  SECTION("Two vector version")
-  {
-
   _1D::RiemannRule<double> integrate;
   double I;
 
@@ -64,21 +61,16 @@ TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
   x[2] = 2; y[2] = 3;
   
 
-  I = integrate( x, y );
-  REQUIRE( I == Approx( 3 ) );
+
+  SECTION("Two vector version")
+  {
+    I = integrate( x, y );
+    REQUIRE( I == Approx( 3 ) );
   }
+  
 
   SECTION("Single vector version")
   {
-
-  _1D::RiemannRule<double> integrate;
-  double I;
-
-  std::vector<double> y(3);
-  y[0] = 1;
-  y[1] = 2;
-  y[2] = 3;
-  
 
   I = integrate( y );
   REQUIRE( I == Approx( 6 ) );
@@ -88,6 +80,16 @@ TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
   I = integrate( y, -2 );
   REQUIRE( I == Approx( -12 ) );
+
+  }
+
+  SECTION("Lambda function tranform")
+  {
+    I = integrate( x, [](int i){return 0;} );
+    REQUIRE( I == Approx( 0 ).scale(1) );
+    I = integrate( x, [&x](int i){return x[i]+1;} );
+    REQUIRE( I == Approx( 3 ) );
+
   }
 
 }

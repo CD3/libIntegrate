@@ -131,6 +131,20 @@ TEST_CASE("Simpson rule on discretized functions.")
       CHECK(I == Approx(-0.1*(5.*5.*5./3. + 2.*5.*5./2. + 3.*5. )));
     }
   }
+
+  SECTION("Lambda function transform")
+  {
+    std::vector<double> x(3);
+    x[0] = 1;
+    x[1] = 3;
+    x[2] = 10;
+
+    auto f = [&x](int i){ return  x[i] * x[i] + 2 * x[i] + 3; };
+
+    I = integrate(x, f);
+    CHECK(I == Approx(10 * 10 * 10 / 3. + 10 * 10 + 3 * 10 - 1 * 1 * 1 / 3. -
+                      1 * 1 - 3 * 1));
+  }
 }
 
 TEST_CASE("Simpson rule benchmarks.","[.][benchmarks]")

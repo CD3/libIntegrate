@@ -2,6 +2,8 @@
 #include <cstddef>
 #include <type_traits>
 
+#include "./Utils.hpp"
+
 namespace _1D
 {
 /** @class
@@ -34,11 +36,13 @@ class SimpsonRule
    * othersize the call is undefined behavior.
    */
   template<typename X, typename Y>
-  auto operator()(const X &x, const Y &y) const -> decltype(x.size(),x[0],y[0],T())
+  auto operator()( const X &x, const Y &y ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
   {
+    using libIntegrate::getSize;
+    using libIntegrate::getElement;
     T sum = 0;
-    decltype(x.size()) i;
-    for (i = 0; i < x.size() - 2; i += 2) {
+    decltype(getSize(x)) i;
+    for (i = 0; i < getSize(x) - 2; i += 2) {
       // Integrate segment using three points
       // \int_a^b f(x) dx = (b-a)/6 [ f(a) + 4*f(m) + f(b) ]
       // a = x[i]
@@ -49,30 +53,39 @@ class SimpsonRule
       // f(b) = y[i+2]
       // and we need to interpolate f(m)
       // clang-format off
-      T m = (x[i] + x[i+2])/2;
-      T ym = y[i  ]*LagrangePolynomial(m, x[i+1], x[i+2], x[i  ])
-           + y[i+1]*LagrangePolynomial(m, x[i  ], x[i+2], x[i+1])
-           + y[i+2]*LagrangePolynomial(m, x[i  ], x[i+1], x[i+2]);
+      auto x1 = getElement(x,i);
+      auto x2 = getElement(x,i+1);
+      auto x3 = getElement(x,i+2);
+      auto y1 = getElement(y,i);
+      auto y2 = getElement(y,i+1);
+      auto y3 = getElement(y,i+2);
+      T m = (x1 + x3)/2;
+      T ym = y1*LagrangePolynomial(m, x2, x3, x1)
+           + y2*LagrangePolynomial(m, x1, x3, x2)
+           + y3*LagrangePolynomial(m, x1, x2, x3);
 
-      sum += (x[i+2]-x[i])/6 * (y[i] + 4*ym + y[i+2]);
+      sum += (x3-x1)/6 * (y1 + 4*ym + y3);
       // clang-format on
     }
 
-    if( x.size() % 2 == 0) // note: this tests if the last *index* is odd. the size will be even.
+    if( getSize(x) % 2 == 0) // note: this tests if the last *index* is odd. the size will be even.
     {
-      if( x.size() > 2)
-      {
       // there is on extra point at the end we need to handle
       // we will use the last *three* points to fit the polynomial
       // but then integrate between the last *two* points.
-      i = x.size()-3;
-      T m = (x[i+1] + x[i+2])/2;
-      T ym = y[i  ]*LagrangePolynomial(m, x[i+1], x[i+2], x[i  ])
-           + y[i+1]*LagrangePolynomial(m, x[i  ], x[i+2], x[i+1])
-           + y[i+2]*LagrangePolynomial(m, x[i  ], x[i+1], x[i+2]);
+      i = getSize(x)-3;
+      auto x1 = getElement(x,i);
+      auto x2 = getElement(x,i+1);
+      auto x3 = getElement(x,i+2);
+      auto y1 = getElement(y,i);
+      auto y2 = getElement(y,i+1);
+      auto y3 = getElement(y,i+2);
+      T m = (x2 + x3)/2;
+      T ym = y1*LagrangePolynomial(m, x2, x3, x1)
+           + y2*LagrangePolynomial(m, x1, x3, x2)
+           + y3*LagrangePolynomial(m, x1, x2, x3);
 
-      sum += (x[i+2]-x[i+1])/6 * (y[i+1] + 4*ym + y[i+2]);
-      }
+      sum += (x3-x2)/6 * (y2 + 4*ym + y3);
     }
 
     return sum;
@@ -88,7 +101,7 @@ class SimpsonRule
    * y must contain 3 or more elements, othersize the call is undefined behavior.
    */
   template<typename Y>
-  auto operator()(const Y &y, T dx = 1) const -> decltype(y.size(),dx*y[0],T())
+  auto operator()( const Y &y, T dx = 1 ) const -> decltype(libIntegrate::getSize(y),dx*libIntegrate::getElement(y,0),T())
   {
     T sum = 0;
     decltype(y.size()) i;

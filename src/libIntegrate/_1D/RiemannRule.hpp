@@ -1,7 +1,8 @@
 #pragma once
 #include<cstddef>
-
 #include <type_traits>
+
+#include "./Utils.hpp"
 
 namespace _1D {
 
@@ -25,22 +26,31 @@ class RiemannRule
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    auto operator()( const X &x, const Y &y ) const -> decltype(x.size(),x[0],y[0],T())
+    auto operator()( const X &x, const Y &y ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
     {
+      // we are using getSize and getElement here so we can support
+      // containers that use methods other than .operator[](int) and .size()
+      // for indexing and reporting the size.
+      // 
+      // for example, Eigen uses operator()(int)
+      using libIntegrate::getSize;
+      using libIntegrate::getElement;
       T sum = 0;
-      for(std::size_t i = 0; i < x.size()-1; i++)
-        sum += y[i]*(x[i+1]-x[i]);
+      for(decltype(getSize(x)) i = 0; i < getSize(x)-1; i++)
+        sum += getElement(y,i)*(getElement(x,i+1)-getElement(x,i));
 
       return sum;
     }
 
     // This version will integrate a set of discrete points that are equally spaced
     template<typename Y>
-    auto operator()( Y &y, T dx = 1 ) const -> decltype(y.size(),dx*y[0],T())
+    auto operator()( const Y &y, T dx = 1 ) const -> decltype(libIntegrate::getSize(y),dx*libIntegrate::getElement(y,0),T())
     {
+      using libIntegrate::getSize;
+      using libIntegrate::getElement;
       T sum = 0;
-      for(std::size_t i = 0; i < y.size(); i++)
-        sum += y[i];
+      for(decltype(getSize(y)) i = 0; i < getSize(y); i++)
+        sum += getElement(y,i);
       sum *= dx;
 
       return sum;

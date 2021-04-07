@@ -2,7 +2,7 @@
 
 #include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
 #include <libIntegrate/_1D/RiemannRule.hpp>
-#include <libIntegrate/_1D/SubscriptLambda.hpp>
+#include <libIntegrate/_1D/RandomAccessLambda.hpp>
 
 // exponential probability distribution
 double probability_density(double x)
@@ -36,10 +36,8 @@ TEST_CASE( "Demos" ) {
     _1D::RiemannRule<double> integrate;
 
     CHECK(integrate(x,rho) == Approx(1).epsilon(0.1));
-    auto f1 = _1D::SubscriptLambda( [&x, &rho](int i){return x[i]*rho[i];} );
-    CHECK(integrate(x,f1) == Approx(1./2).epsilon(0.01));
-    auto f3 = _1D::SubscriptLambda( [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];} );
-    CHECK(integrate(x,f3) == Approx(1./4).epsilon(0.1));
+    CHECK(integrate(x, [&x, &rho](int i){return x[i]*rho[i];} ) == Approx(1./2).epsilon(0.01));
+    CHECK(integrate(x, [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];} ) == Approx(1./4).epsilon(0.1));
 
   }
 
