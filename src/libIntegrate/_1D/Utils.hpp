@@ -24,7 +24,7 @@ namespace libIntegrate {
     }
 
     template<typename C>
-    auto getElement(const C& c, std::size_t i, priority<2>) -> decltype(c[IntOnly{}])
+    auto getElement(const C& c, std::size_t i, priority<3>) -> decltype(c[IntOnly{}])
     {
       return c[i];
     }

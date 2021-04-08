@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include "./Utils.hpp"
+#include "./RandomAccessLambda.hpp"
 
 namespace _1D {
 
@@ -16,15 +17,9 @@ class RiemannRule
   public:
     RiemannRule() = default;
 
-    // This version will integrate a callable between two points using a number of evaluations set at run-time
-    template<typename F, std::size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_==0)>::type>
-    T operator()( F f, T a, T b, std::size_t N ) const;
-
-    // This version will integrate a callable between two points using a number of evaluation set at compile-time 
-    template<typename F, std::size_t NN_ = NN, typename SFINAE = typename std::enable_if<(NN_>0)>::type>
-    T operator()( F f, T a, T b) const;
-
-    // This version will integrate a set of discrete points
+    /*
+     * Integrate a discretized function from the set of argument and function values.
+     */
     template<typename X, typename Y>
     auto operator()( const X &x, const Y &y ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
     {
@@ -42,7 +37,9 @@ class RiemannRule
       return sum;
     }
 
-    // This version will integrate a set of discrete points that are equally spaced
+    /*
+     * Integrate a discretized function assuming uniform spacing.
+     */
     template<typename Y>
     auto operator()( const Y &y, T dx = 1 ) const -> decltype(libIntegrate::getSize(y),dx*libIntegrate::getElement(y,0),T())
     {
@@ -56,40 +53,36 @@ class RiemannRule
       return sum;
     }
 
+    /*
+     * Integrate a callable between two points by
+     * dividing it into a given number of intervals.
+     */
+    template<typename F>
+    T operator()( F f, T a, T b, std::size_t N ) const
+    {
+      T dx = (b-a)/N;
+      return
+      this->operator()(
+          _1D::RandomAccessLambda(
+            [&a,&dx](int i){return a + i*dx;},
+            [&N](){return N+1;} // N here means number of intervals. In the discretized functions, it means the number of points.
+            ),
+        [&a,&dx,&f](int i){ return f(a + i*dx); }
+      );
+    }
+
+    /*
+     * Integrate a callable between two points by
+     * dividing it into a given number of intervals set at compile time.
+     */
+    template<typename F>
+    T operator()( F f, T a, T b) const
+    {
+      return this->operator()(f,a,b,NN);
+    }
+
+
   protected:
 };
-
-
-template<typename T, std::size_t NN>
-template<typename F, std::size_t NN_, typename SFINAE>
-T RiemannRule<T,NN>::operator()( F f, T a, T b, std::size_t N ) const
-{
-  T sum = 0;
-  T dx = static_cast<T>(b-a)/N; // make sure we don't get integer rounding
-  T x = a;
-  for(std::size_t i = 0; i < N; i++)
-  {
-    sum += f(x);
-    x += dx;
-  }
-  sum *= dx;
-  return sum;
-}
-
-template<typename T, std::size_t NN>
-template<typename F, std::size_t NN_, typename SFINAE>
-T RiemannRule<T,NN>::operator()( F f, T a, T b) const
-{
-  T sum = 0;
-  T dx = static_cast<T>(b-a)/NN; // make sure we don't get integer rounding
-  T x = a;
-  for(std::size_t i = 0; i < NN; i++)
-  {
-    sum += f(x);
-    x += dx;
-  }
-  sum *= dx;
-  return sum;
-}
 
 }
