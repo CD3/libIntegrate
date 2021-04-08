@@ -6,6 +6,9 @@
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
 #include <libIntegrate/_1D/SimpsonRule.hpp>
 #include <libIntegrate/_2D/DiscretizedIntegratorWrapper.hpp>
+#include <libIntegrate/_2D/RiemannRule.hpp>
+#include <libIntegrate/_2D/TrapezoidRule.hpp>
+#include <libIntegrate/_2D/SimpsonRule.hpp>
 
 TEST_CASE("Test the 2D discretized integration wrapper")
 {
@@ -67,21 +70,21 @@ TEST_CASE("Test the 2D discretized integration wrapper")
      */
     SECTION("Riemann")
     {
-      _2D::DiscretizedIntegratorWrapper<_1D::RiemannRule<double>> integrate;
+      _2D::RiemannRule<double> integrate;
       CHECK(integrate(x,y,f) < 1);
       CHECK(integrate(x,y,f) == Approx(1).epsilon(0.1));
       CHECK(integrate(x,y,f) != Approx(1).epsilon(0.01));
     }
     SECTION("Trapezoid")
     {
-      _2D::DiscretizedIntegratorWrapper<_1D::TrapezoidRule<double>> integrate;
+      _2D::TrapezoidRule<double> integrate;
       CHECK(integrate(x,y,f) < 1);
       CHECK(integrate(x,y,f) == Approx(1).epsilon(0.0001));
       CHECK(integrate(x,y,f) != Approx(1).epsilon(0.00001));
     }
     SECTION("Simpson")
     {
-      _2D::DiscretizedIntegratorWrapper<_1D::SimpsonRule<double>> integrate;
+      _2D::SimpsonRule<double> integrate;
       CHECK(integrate(x,y,f) == Approx(1).epsilon(0.0000001));
     }
 

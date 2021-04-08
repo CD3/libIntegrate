@@ -1,5 +1,8 @@
 #pragma once
+
 #include<cstddef>
+#include "./DiscretizedIntegratorWrapper.hpp"
+#include "../_1D/RiemannRule.hpp"
 
 namespace _2D {
 
@@ -8,51 +11,36 @@ namespace _2D {
   * @author C.D. Clark III
   */
 template<typename T>
-class RiemannRule
-{
+class RiemannRule : public DiscretizedIntegratorWrapper<_1D::RiemannRule<T>>
+{ 
   public:
-    RiemannRule () = default;
 
-    // This version will integrate a callable between four points
-    template<typename F, typename X>
-    T operator()( F f, X xa, X xb, std::size_t xN, X ya, X yb, std::size_t yN ) const;
+    using BaseType = DiscretizedIntegratorWrapper<_1D::RiemannRule<T>>;
+    using BaseType::operator();
 
-    // This version will integrate a set of discrete points
-    template<typename X, typename Y, typename F>
-    auto operator()( X &x, Y &y, F &f ) const -> decltype(T())
+    template<typename F>
+    T operator()( F f, T xa, T xb, std::size_t xN, T ya, T yb, std::size_t yN ) const
     {
       T sum = 0;
-      for(std::size_t i = 0; i < x.size()-1; i++)
-        for(int j = 0; j < y.size()-1; j++)
-          sum += f[i][j]*(x[i+1]-x[i])*(y[j+1]-y[j]);
-
+      T dx = (xb-xa)/xN;
+      T dy = (yb-ya)/yN;
+      T y = ya;
+      for(std::size_t i = 0; i < xN; i++)
+      {
+        T x = xa;
+        for(std::size_t j = 0; j < yN; j++)
+        {
+          sum += f(x,y);
+          x += dx;
+        }
+        y += dy;
+      }
+      sum *= dx*dy;
       return sum;
     }
 
-  protected:
 };
 
 
-template<typename T>
-template<typename F, typename X>
-T RiemannRule<T>::operator()( F f, X xa, X xb, std::size_t xN, X ya, X yb, std::size_t yN ) const
-{
-  T sum = 0;
-  X dx = (xb-xa)/xN; // make sure we don't get integer rounding
-  X dy = (yb-ya)/yN; // make sure we don't get integer rounding
-  X y = ya;
-  for(std::size_t i = 0; i < xN; i++)
-  {
-    X x = xa;
-    for(std::size_t j = 0; j < yN; j++)
-    {
-      sum += f(x,y);
-      x += dx;
-    }
-    y += dy;
-  }
-  sum *= dx*dy;
-  return sum;
-}
 
 }
