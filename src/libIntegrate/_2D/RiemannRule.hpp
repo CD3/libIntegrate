@@ -19,7 +19,15 @@ class RiemannRule
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y, typename F>
-    T operator()( X &x, Y &y, F &f ) const;
+    auto operator()( X &x, Y &y, F &f ) const -> decltype(T())
+    {
+      T sum = 0;
+      for(std::size_t i = 0; i < x.size()-1; i++)
+        for(int j = 0; j < y.size()-1; j++)
+          sum += f[i][j]*(x[i+1]-x[i])*(y[j+1]-y[j]);
+
+      return sum;
+    }
 
   protected:
 };
@@ -44,18 +52,6 @@ T RiemannRule<T>::operator()( F f, X xa, X xb, std::size_t xN, X ya, X yb, std::
     y += dy;
   }
   sum *= dx*dy;
-  return sum;
-}
-
-template<typename T>
-template<typename X, typename Y, typename F>
-T RiemannRule<T>::operator()( X &x, Y &y, F &f ) const
-{
-  T sum = 0;
-  for(std::size_t i = 0; i < x.size()-1; i++)
-    for(int j = 0; j < y.size()-1; j++)
-      sum += f[i][j]*(x[i+1]-x[i])*(y[j+1]-y[j]);
-
   return sum;
 }
 
