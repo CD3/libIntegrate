@@ -2,6 +2,8 @@
 #include<cstddef>
 
 #include "./Utils.hpp"
+#include "../_1D/RandomAccessLambda.hpp"
+#include "../_2D/RandomAccessLambda.hpp"
 
 namespace _2D {
 
@@ -39,6 +41,20 @@ class DiscretizedIntegratorWrapper
         sums[i] = integrate(y, [&f,i](std::size_t j){ return getElement(f,i,j); });
       }
       return integrate(x,sums);
+    }
+
+    template<typename F>
+    DataType operator()( F f, DataType xa, DataType xb, std::size_t xN, DataType ya, DataType yb, std::size_t yN ) const
+    {
+      // discretize the function with lambda functions
+      // and call the discretized function integrators
+      DataType dx = (xb-xa)/xN;
+      DataType dy = (yb-ya)/yN;
+      return this->operator()(
+          _1D::RandomAccessLambda([&xa,&dx](int i){return xa + i*dx;},[&xN](){return xN+1;}),
+          _1D::RandomAccessLambda([&ya,&dy](int j){return ya + j*dy;},[&yN](){return yN+1;}),
+          [&xa,&ya,&dx,&dy,&f](int i, int j){ return f(xa+i*dx,ya+j*dy); }
+      );
     }
 
   protected:

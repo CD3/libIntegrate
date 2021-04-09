@@ -1,3 +1,4 @@
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
 
 #include <libIntegrate/_1D/RiemannRule.hpp>
@@ -94,16 +95,28 @@ TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
 
 }
 
-TEST_CASE( "Testing 2D Riemann rule on linear functions." ) {
+TEST_CASE( "2D Riemann Rule" ) {
 
   _2D::RiemannRule<double> integrate;
   double I;
 
-  auto f  = [](double x, double y){ return 10*x + 20*y + 30;};
-  auto fi = [](double x, double y){ return 10*x*x*y/2 + 20*y*y*x/2 + 30*x*y;};
+  SECTION("integrating linear function")
+  {
+    auto f  = [](double x, double y){ return 10*x + 20*y + 30;};
+    auto fi = [](double x, double y){ return 10*x*x*y/2 + 20*y*y*x/2 + 30*x*y;};
 
-  I = integrate( f, 2., 5., 1000, 3., 6., 1000 );
-  REQUIRE( I == Approx( ( fi(5,6) - fi(5,3) ) - ( fi(2,6) - fi(2,3) ) ).epsilon(0.001) );
+    I = integrate( f, 2., 5., 1000, 3., 6., 1000 );
+    REQUIRE( I == Approx( ( fi(5,6) - fi(5,3) ) - ( fi(2,6) - fi(2,3) ) ).epsilon(0.001) );
+  }
+  SECTION("integrating sin(x)sin(y)")
+  {
+    auto f  = [](double x, double y){ return sin(x)*sin(y); };
+
+    I = integrate( f, 0, M_PI/2, 100, 0, M_PI/2, 100 );
+    CHECK( I < 1 );
+    CHECK( I == Approx(1).epsilon(0.03) );
+
+  }
 
 
 }
@@ -118,6 +131,20 @@ TEST_CASE( "Testing 1D Riemann rule with static interval number." ) {
 
 
 }
+
+TEST_CASE( "Riemann Benchmarks", "[.][bencharmks]" ) {
+
+  _2D::RiemannRule<double> integrate;
+
+  auto f = [](double x, double y){ return sin(x)*sin(y); };
+
+  BENCHMARK("Integrating a callable")
+  {
+    return integrate( f, 0, M_PI, 100, 0, M_PI, 100 );
+  };
+
+}
+
 
 
 }

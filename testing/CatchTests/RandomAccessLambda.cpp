@@ -8,8 +8,9 @@
 #include <functional>
 #include <libIntegrate/_1D/RandomAccessLambda.hpp>
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
+#include <libIntegrate/_2D/RandomAccessLambda.hpp>
 
-TEST_CASE("RandomAccessLambda Usage")
+TEST_CASE("1D RandomAccessLambda Usage")
 {
   SECTION("wrapper on std::vector")
   {
@@ -32,6 +33,23 @@ TEST_CASE("RandomAccessLambda Usage")
     CHECK(f(1) == Approx(0.1));
     CHECK(f(99) == Approx(9.9));
   }
+}
+
+TEST_CASE("2D RandomAccessLambda Usage")
+{
+  SECTION("wrapper on std::vector")
+  {
+    std::vector<int> v(10);
+    std::iota(v.begin(),v.end(),10);
+    auto f = _2D::RandomAccessLambda([&v](int i, int j){return v[i*2+j];}, [&v](int i){return i==0?5:2;});
+    CHECK( f.size(0) == 5 );
+    CHECK( f.size(1) == 2 );
+    CHECK( f(0,0) == 10 );
+    CHECK( f(0,1) == 11 );
+    CHECK( f(1,0) == 12 );
+    CHECK( f(4,1) == 19 );
+  }
+
 }
 
 TEST_CASE("RandomAcessLambda Benchmarks","[.][benchmarks]")

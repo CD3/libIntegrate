@@ -3,6 +3,7 @@
 
 #include <numeric>
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
+#include <libIntegrate/_2D/TrapezoidRule.hpp>
 
 namespace TrapeziodRuleTests
 {
@@ -113,6 +114,28 @@ TEST_CASE( "Testing 1D Trapezoid rule with static interval number." ) {
 }
 
 }
+
+
+TEST_CASE( "2D Trapezoid Rule" ) {
+
+  _2D::TrapezoidRule<double> integrate;
+  double I;
+
+  SECTION("integrating sin(x)sin(y)")
+  {
+    auto f  = [](double x, double y){ return sin(x)*sin(y); };
+
+    I = integrate( f, 0, M_PI/2, 100, 0, M_PI/2, 100 );
+    CHECK( I < 1 );
+    CHECK( I == Approx(1).epsilon(0.01) );
+
+  }
+
+
+}
+
+
+
 
 TEST_CASE("Trapezoid Rule Benchmarks","[.][benchmarks]")
 {
