@@ -1,6 +1,6 @@
 # C++ library for numerical integration
 
-`libIntegrate` is a collection of algorithms for doing numerical integration, **including discretized data**.
+`libIntegrate` is a collection of methods for numerical integration, **including discretized data**.
 
 # Description
 
@@ -40,23 +40,36 @@ want with it.
 Methods currently implemented include (but are not limited to):
 
 - 1D
-    - Riemann sum (the one that every undergrad physics major writes)
-    - Trapezoid rule
-    - Simpson's rule (1/3)
-    - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
+    - Discretized Functions
+        - Riemann sum (the one that every undergrad physics major writes)
+        - Trapezoid rule
+        - Simpson's rule (1/3)
+    - Callable Functions
+        - Riemann sum
+        - Trapezoid rule
+        - Simpson's rule (1/3)
+        - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
 - 2D
-    - Riemann sum
-    - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
+    - Discretized Functions
+        - Riemann sum
+        - Trapezoid rule
+        - Simpson's rule (1/3)
+    - Callable Functions
+        - Riemann sum
+        - Trapezoid rule
+        - Simpson's rule (1/3)
+        - Gauss-Legendre Quadrature of order 8, 16, 32, and 64.
 
 Note that the library depends on Boost, and does provide some (incomplete) wrappers to the Boost.Math quadrature functions.
 
 **Features:**
 
-- Integrate discrete data, with Riemann, Trapezoid, and Simpson rules.
+- Integrate one and two dimensional discretized functions, with Riemann, Trapezoid, and Simpson rules.
 - Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
-- Templated methods work on any vector-like data structure. The methods will call `.size()` and `operator[](int)` (the subscript operator).
-- Support for non-uniform discretized data.
-- Apply lazy transformations to discrete data before integrating with subscript lambdas (a lambda function-like object that provides a subscript operator).
+- Handles several several common randome access, continuous memory containers (std::vector, Eigen::Vector, etc). Any container
+  that provides element access with `operator[](int)` or `operator()(int)` and a method for getting the size (`.size()`, `.length()`, `.rows()`, etc) can be integrated.
+- Support for non-uniform discretization.
+- Apply lazy transformations to discrete data before integrating. Useful for computing weighted integrals.
 
 
 
@@ -175,7 +188,7 @@ See the unit tests (./testing/CatchTests/) for more examples.
 Sometimes it's necessary to multiply a function by some weighting function
 before integrating. For example, when integrating a function in polar
 coordinates, or computing an expectation value from a probability distribution.
-For Case 1, we can simply use a lambda.
+For Case 1, we can use a lambda to compute the weighted integrand.
 ```
 #include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
 ...
@@ -201,16 +214,10 @@ CHECK(integrate([](double x){ return x*x*probability_density(x);}, 0, 10) == App
 CHECK(integrate([](double x){ return (x-1./2)*(x-1./2)*probability_density(x);}, 0, 10) == Approx(1./4));
 ```
 
-For Case 2, a lambda function cannot be used because the integrator will make calls to the subscript operator. We could compute the weighted integrand and store
-the result in another vector, but if will it only be used one, the memory allocation may be too expensive.
-The library provides a class `SubscriptLambdaObj<T>` for this.
-The helper function `SubscriptLambda(...)` is used to create an instance that wraps a lambda function and provides a subscript operator.
-The lambda function can then capture any other data that is needed to compute the integrand, for example other vectors. Note that these should be captured by *reference*, or
-else they will be copied when creating the `SubscriptLambdaObj<T>` instance.
+We can use a lambda for Case 2 as well, but the it should accept an integer specifying the element index and return the value of the weighted integrand for the given index.
 
 ```
 #include <libIntegrate/_1D/RiemannRule.hpp>
-#include <libIntegrate/_1D/SubscriptLambda.hpp>
 ...
 
 int N = 200;
@@ -224,9 +231,9 @@ for(int i = 0; i < N; i++)
 _1D::RiemannRule<double> integrate;
 
 CHECK(integrate(x,rho) == Approx(1).epsilon(0.1));
-auto f1 = _1D::SubscriptLambda( [&x, &rho](int i){return x[i]*rho[i];} );
+auto f1 = [&x, &rho](int i){return x[i]*rho[i];};
 CHECK(integrate(x,f1) == Approx(1./2).epsilon(0.01));
-auto f3 = _1D::SubscriptLambda( [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];} );
+auto f3 = [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];};
 CHECK(integrate(x,f3) == Approx(1./4).epsilon(0.1));
 
 ```
@@ -246,8 +253,13 @@ class RiemannRule
     T operator()( F f, X a, X b, size_t N ) const;
 
     // This version will integrate a set of discrete points
+    // with the x and y values stored in separate containers.
     template<typename X, typename Y>
-    T operator()( X &x, Y &y ) const;
+    T operator()( const X &x, const Y &y ) const;
+
+    // This version will integrate a set of uniformly discrete points
+    template<typename Y>
+    T operator()( const Y &y, T dx ) const;
 };
 }
 ```
@@ -260,14 +272,14 @@ template<typename T>
 class TrapezoidRule
 {
   public:
-    // This version will integrate a callable between two points
-    template<typename F>
-    T operator()( F f, T a, T b, size_t N ) const;
+    template<typename F, typename X>
+    T operator()( F f, X a, X b, size_t N ) const;
 
-    // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    T operator()( X &x, Y &y ) const;
+    T operator()( const X &x, const Y &y ) const;
 
+    template<typename Y>
+    T operator()( const Y &y, T dx ) const;
 };
 }
 ```
@@ -280,13 +292,15 @@ template<typename T>
 class SimpsonRule
 {
   public:
-    // This version will integrate a callable between two points
-    template<typename F>
-    T operator()( F f, T a, T b, size_t N ) const;
-    
-    // This version will integrate a set of discrete points
+  public:
+    template<typename F, typename X>
+    T operator()( F f, X a, X b, size_t N ) const;
+
     template<typename X, typename Y>
-    T operator()( X &x, Y &y ) const;
+    T operator()( const X &x, const Y &y ) const;
+
+    template<typename Y>
+    T operator()( const Y &y, T dx ) const;
 };
 }
 ```
