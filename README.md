@@ -2,6 +2,18 @@
 
 `libIntegrate` is a collection of methods for numerical integration, **including discretized data**.
 
+
+**Features:**
+
+- Integrate one and two dimensional discretized functions, with Riemann, Trapezoid, and Simpson rules.
+- Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
+- Handles several common random access, continuous memory container interfacess (std::vector, Eigen::Vector, etc). Containers
+  that provide element access with `operator[](int)` or `operator()(int)` and a method for getting the size (`.size()`, `.length()`, `.rows()`, etc) can be integrated.
+- Support for non-uniform discretization.
+- Apply lazy transformations to discrete data before integrating. Useful for computing weighted integrals.
+
+
+
 # Description
 
 It is often necessary to integrate functions that have been *discretized* when doing physics simulations or working with
@@ -67,17 +79,6 @@ Note that the library depends on Boost, and does provide some (incomplete) wrapp
 
 - 1D
     - Gauss-Kronrod Quadrature (arbitrary order)
-
-**Features:**
-
-- Integrate one and two dimensional discretized functions, with Riemann, Trapezoid, and Simpson rules.
-- Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
-- Handles several common random access, continuous memory container interfacess (std::vector, Eigen::Vector, etc). Containers
-  that provide element access with `operator[](int)` or `operator()(int)` and a method for getting the size (`.size()`, `.length()`, `.rows()`, etc) can be integrated.
-- Support for non-uniform discretization.
-- Apply lazy transformations to discrete data before integrating. Useful for computing weighted integrals.
-
-
 
 # Usage
 
