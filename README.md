@@ -4,13 +4,16 @@
 
 # Description
 
-Most libraries for numerical integration provide routines for integrating functions that can be *evaluated*, but not
-for functions that have already been *discretized*. Often, when doing physics simulations, one needs to integrate functions
-that cannot be evaluated at arbitrary points, but for which the function values are known at some discrete set of points. For example,
-we might use a finite-difference method to solve Schrodinger's equation and compute the time-evolution of a wavefunction describing some system.
+It is often necessary to integrate functions that have been *discretized* when doing physics simulations or working with
+experimental data. 
+For example, we might use a finite-difference method to solve Schrodinger's equation and compute the time-evolution of a wavefunction describing some system.
 If we then want to compute probabilities, we will need to integrate the wavefunction (actually, we will need to integrate the modulus squared of the wavefunction).
+Or, we might have a measured spectrum for a broadband source that we need to integrate to compute the total power emitted.
+In either case, we will have a discrete set of points to use for the integration.
 
-The usual methods for numerical integration are not suitable for this. This library provides methods that are.
+Most libraries for numerical integration provide routines for integrating functions that can be *evaluated*, not
+for functions that have already been *discretized*, and are therefore not suitable for this.
+This library provides methods that are.
 
 If the function you need to integrate is already discretized, there are not many options to choose from. There is the Riemann sum, the Trapezoid rule, and
 perhaps Simpson's rule. Each of these methods basically interpolate the function over some interval and use the integral of the interpolating function to estimate
@@ -20,7 +23,7 @@ to data sets is usually not appropriate.
 
 Quickly writing a Riemann sum loop to compute the integral of some discretized function is pretty easy. Writing the Trapezoid rule isn't difficult either, but you need to be careful not
 to index out of range at the end of the loop. Simpson's rule is simple enough for uniform data, but again requires care at the end of the loop. For non-uniform data, it is a bit more involved.
-I noticed that, when needing to integrate some discretized function, I would often just use a Riemann sum and say to myself "I'll come back and use a better method this after I get it working", but 
+I noticed that, when needing to integrate some discretized function, I would often just use a Riemann sum and say to myself "I'll come back and use a better method after I get this working", but 
 then wouldn't. So this library was created to make using "better" methods on discretized data easy.
 
 While this library does provide methods for integrating functions that can be evaluated too, they are not nearly as
@@ -37,7 +40,7 @@ be evaluated, this library may be for you.
 It is released under a permissive license, so you are free to do whatever you
 want with it.
 
-Methods currently implemented include (but are not limited to):
+Methods currently implemented include:
 
 - 1D
     - Discretized Functions
@@ -62,12 +65,15 @@ Methods currently implemented include (but are not limited to):
 
 Note that the library depends on Boost, and does provide some (incomplete) wrappers to the Boost.Math quadrature functions.
 
+- 1D
+    - Gauss-Kronrod Quadrature (arbitrary order)
+
 **Features:**
 
 - Integrate one and two dimensional discretized functions, with Riemann, Trapezoid, and Simpson rules.
 - Simple, clean, uniform interface. Integration methods are implemented as classes with `operator()(...)` methods.
-- Handles several several common randome access, continuous memory containers (std::vector, Eigen::Vector, etc). Any container
-  that provides element access with `operator[](int)` or `operator()(int)` and a method for getting the size (`.size()`, `.length()`, `.rows()`, etc) can be integrated.
+- Handles several common random access, continuous memory container interfacess (std::vector, Eigen::Vector, etc). Containers
+  that provide element access with `operator[](int)` or `operator()(int)` and a method for getting the size (`.size()`, `.length()`, `.rows()`, etc) can be integrated.
 - Support for non-uniform discretization.
 - Apply lazy transformations to discrete data before integrating. Useful for computing weighted integrals.
 
@@ -75,7 +81,26 @@ Note that the library depends on Boost, and does provide some (incomplete) wrapp
 
 # Usage
 
-## Background
+## Installing
+
+libIntegrate is a header-only library that uses CMake for building unit tests and installing. To install the library, clone this and checkout the latest release,
+or download one of the release tarballs. Then,
+```
+$ cd libIntegrate
+$ mkdir build
+$ cd build
+$ cmake ..
+$ cmake --build . --target install
+```
+
+Conan packages are also provided. To install the library with conan, add the remote https://cd3.jfrog.io/artifactory/api/conan/cd3-conan and include `libintegrate/VERSION@cd3/devel` to
+you `conanfile.txt` or `conanfile.py`.
+```
+$ conan remote add cd3-conan https://cd3.jfrog.io/artifactory/api/conan/cd3-conan
+$ conan search -r cd3-conan # list all packages
+```
+
+## Overview
 
 
 There are two basic types of numerical integration. In the first case, the value
@@ -95,11 +120,50 @@ The [libInterpolate](https://github.com/CD3/libInterpolate) library is useful fo
 
 ## Examples
 
-### Case 1: Functions that can be evaluated
+### Discretized Functions
 
-Integration methods are implemented as separate classes that implement `operator()` (i.e. instances
-can be called like functions). All classed in `libIntegrate` support Case 1, integrating
-a function that can be evaluated at arbitrary arguments. For example, to integrate a function using Simposon's Rule:
+In the simplest case, you have a discretized function with the argument and function values stored in two vectors.
+```
+std::vector<double> x(100), f(100);
+double dx = M_PI/(x.size()-1);
+for(int i = 0; i < x.size(); i++)
+{
+  x[i] = i*dx;
+  f[i] = sin(x[i]);
+}
+```
+To integrate the function, create an integrator object and call it on the discretized function.
+```
+#include <libIntegrate/Integrate.hpp>
+
+_1D::RiemannRule<double> integrage;
+
+double I = integrate(x,f); // I \approx 2
+```
+Each method is implemented in a class. To use a different method, instantiate the corresponding class.
+```
+_1D::TrapezoidRule<double> trap_integrage;
+_1D::SimpsonRule<double> simp_integrage;
+```
+
+Now, in practice, you would not need to manually discretize a function that can be evaluated. All of the methods support integrating a callable
+with a specified number of intervals. The example above is equivalent to
+```
+#include <libIntegrate/Integrate.hpp>
+
+_1D::RiemannRule<double> integrage;
+
+double I = integrate([](double x){return sin(x);}, 0, M_PI, 99);
+```
+
+However, when the discretized function is computed by solving a differential equation, or is data that was measured in an experiment, the discretized
+integration is required.
+
+### Callable Functions
+
+As mentioned in the description, some basic methods for integrating functions that can be evaluated are provided.
+These methods take a callable, the limits of integration, and the number of intervals to use.
+For example, to integrate a function using Simposon's Rule:
 ```cpp
 #include <libIntegrate/_1D/SimpsonRule.hpp>
 ...
@@ -125,11 +189,10 @@ I = integrate([](double x){return 2*x + 3;},2.,5.,10);
 CHECK( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
 
 ```
-The function to be evaluated is passed as the first argument
-to the integrator, and can be any callable (including a lambda) that takes one argument. The lower and upper integration bounds are passed next.
-The last argument specifies the number of evaluation points to use. Note that not all methods support specifying the number
-of evaluation points. The Gauss-Legendre methods for example evaluate the function at a set number of points, given
-by the order of the method. In this case, the number of evaluation points argument is dropped.
+The first argument can be any callable (including a lambda) that takes one argument.
+Note that not all methods support specifying the number
+of intervals. The Gauss-Legendre methods for example evaluate the function at a set number of points, given
+by the order of the method. In this case, the last argument is dropped.
 
 ```cpp
 #include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
@@ -143,52 +206,39 @@ CHECK( integrate( f, 0., 1. )  == Approx( 1 + 1/2. + 1/3. + 1/4. - 1 ) );
 
 ```
 
-### Case 2: Discretized functions
-
-Some classes in `libIntegrate` support Case 2, integrating a discretized function. These classes implement
-an `operator()` overload that takes two vector-like arguments containing the argument and function values.
-```cpp
-#include <libIntegrate/_1D/TrapezoidRule.hpp>
-
-...
-
-double linear_func(double x)
-{
-  return 2*x + 3;
-}
-
-...
-
-_1D::TrapezoidRule<double> integrate;
-
-double  I = integrate( linear_func, 2., 5., 2 );
-CHECK( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
-
-_1D::TrapezoidRule<double> integrate;
-
-std::vector<double> x(3),y(3);
-x[0] = 0; y[0] = 1;
-x[1] = 1; y[1] = 2;
-x[2] = 2; y[2] = 3;
-  
-double I = integrate( x, y );
-CHECK( I == Approx( 4 ) );
-
-// can still use integrator for Case 1
-I = integrate( linear_func, 2., 5., 2 );
-CHECK( I == Approx( 5*5+5*3 - 2*2 - 2*3 ) );
-```
-The discretized function to be integrated is passed as two vectors, the first containing the argument values, and the second
-containing the function values.
-
-See the unit tests (./testing/CatchTests/) for more examples.
 
 ### Weighted Integrals
 
 Sometimes it's necessary to multiply a function by some weighting function
 before integrating. For example, when integrating a function in polar
 coordinates, or computing an expectation value from a probability distribution.
-For Case 1, we can use a lambda to compute the weighted integrand.
+Lambda functions can be used for this with both discretized and callable functions.
+
+For discretized functions, the lambda should take an integral argument (the library actually requires the argument to be an integer type and will
+generate a compiler error if it is not), and return the weighted integrand for each element of the function.
+
+```
+#include <libIntegrate/_1D/RiemannRule.hpp>
+...
+
+int N = 200;
+std::vector<double> x(N), rho(N);
+for(int i = 0; i < N; i++)
+{
+  x[i] = i*10./(N-1);
+  rho[i] = 2*exp(-2*x[i]);
+}
+
+_1D::RiemannRule<double> integrate;
+
+CHECK(integrate(x,rho) == Approx(1).epsilon(0.1));
+auto f1 = [&x, &rho](int i){return x[i]*rho[i];};
+CHECK(integrate(x,f1) == Approx(1./2).epsilon(0.01));
+auto f3 = [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];};
+CHECK(integrate(x,f3) == Approx(1./4).epsilon(0.1));
+
+```
+For callable functions, the lambda take the function argument should return the weighted integrand.
 ```
 #include <libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
 ...
@@ -214,33 +264,10 @@ CHECK(integrate([](double x){ return x*x*probability_density(x);}, 0, 10) == App
 CHECK(integrate([](double x){ return (x-1./2)*(x-1./2)*probability_density(x);}, 0, 10) == Approx(1./4));
 ```
 
-We can use a lambda for Case 2 as well, but the it should accept an integer specifying the element index and return the value of the weighted integrand for the given index.
-
-```
-#include <libIntegrate/_1D/RiemannRule.hpp>
-...
-
-int N = 200;
-std::vector<double> x(N), rho(N);
-for(int i = 0; i < N; i++)
-{
-  x[i] = i*10./(N-1);
-  rho[i] = 2*exp(-2*x[i]);
-}
-
-_1D::RiemannRule<double> integrate;
-
-CHECK(integrate(x,rho) == Approx(1).epsilon(0.1));
-auto f1 = [&x, &rho](int i){return x[i]*rho[i];};
-CHECK(integrate(x,f1) == Approx(1./2).epsilon(0.01));
-auto f3 = [&x, &rho](int i){return (x[i]-0.5)*(x[i]-0.5)*rho[i];};
-CHECK(integrate(x,f3) == Approx(1./4).epsilon(0.1));
-
-```
 
 ## Implemented Methods
 
-### Riemann's Rule
+### 1D Riemann's Rule
 ```cpp
 
 namespace _1D {
@@ -249,8 +276,8 @@ class RiemannRule
 {
   public:
     // This version will integrate a callable between two points
-    template<typename F, typename X>
-    T operator()( F f, X a, X b, size_t N ) const;
+    template<typename F>
+    T operator()( F f, T a, T b, size_t N ) const;
 
     // This version will integrate a set of discrete points
     // with the x and y values stored in separate containers.
@@ -264,7 +291,7 @@ class RiemannRule
 }
 ```
 
-### Trapezoid Rule
+### 1D Trapezoid Rule
 
 ```cpp
 namespace _1D {
@@ -272,8 +299,8 @@ template<typename T>
 class TrapezoidRule
 {
   public:
-    template<typename F, typename X>
-    T operator()( F f, X a, X b, size_t N ) const;
+    template<typename F>
+    T operator()( F f, T a, T b, size_t N ) const;
 
     template<typename X, typename Y>
     T operator()( const X &x, const Y &y ) const;
@@ -284,7 +311,7 @@ class TrapezoidRule
 }
 ```
 
-### Simpson's Rule
+### 1D Simpson's Rule
 
 ```cpp
 namespace _1D {
@@ -293,8 +320,8 @@ class SimpsonRule
 {
   public:
   public:
-    template<typename F, typename X>
-    T operator()( F f, X a, X b, size_t N ) const;
+    template<typename F>
+    T operator()( F f, T a, T b, size_t N ) const;
 
     template<typename X, typename Y>
     T operator()( const X &x, const Y &y ) const;
@@ -305,7 +332,7 @@ class SimpsonRule
 }
 ```
 
-### Gaussian-Legandre Quadrature
+### 1D Gaussian-Legandre Quadrature
 
 ```cpp
 namespace _1D {
@@ -315,16 +342,15 @@ template<typename T, size_t Order> // Order = 8, 16, 32, or 64
 class GaussLegendreQuadrature
 {
   public:
-    // This version will integrate a callable between two points
-    template<typename F, typename X>
-    T operator()( F f, X a, X b ) const;
+    template<typename F>
+    T operator()( F f, T a, T b ) const;
     // Integrating a set of discrete points is not supported
 };
 }
 }
 ```
 
-### Gaussian-Kronrod Quadrature
+### 1D Gaussian-Kronrod Quadrature
 
 The library also provides wrappers for some of the Boost.Math Quadrature routines. The Boost routines are implemented
 as free functions. These wrappers simply provide an object-oriented interface.
@@ -345,6 +371,81 @@ class GaussKronrodQuadrature{
     template<typename F, typename X>
     auto operator()(F f, X a, X b) const -> T
 
+};
+}
+}
+```
+
+
+
+### 2D Riemann's Rule
+```cpp
+
+namespace _2D {
+template<typename T>
+class RiemannRule
+{
+  public:
+    // This version will integrate a callable between two points
+    template<typename F, typename X>
+    T operator()( F f, T xa, T xb, size_t xN, T ya, Ty yb, size_t yN) const;
+
+    // This version will integrate a set of discrete points
+    // with the x and y values stored in separate containers.
+    template<typename X, typename Y, typename F>
+    T operator()( const X &x, const Y &y, const F &f ) const;
+};
+}
+```
+
+### 2D Trapezoid Rule
+
+```cpp
+namespace _2D {
+template<typename T>
+class TrapezoidRule
+{
+  public:
+    template<typename F, typename X>
+    T operator()( F f, T xa, T xb, size_t xN, T ya, Ty yb, size_t yN) const;
+
+    template<typename X, typename Y, typename F>
+    T operator()( const X &x, const Y &y, const F &f ) const;
+};
+}
+```
+
+### 2D Simpson's Rule
+
+```cpp
+namespace _2D {
+template<typename T>
+class SimpsonRule
+{
+  public:
+  public:
+    template<typename F, typename X>
+    T operator()( F f, T xa, T xb, size_t xN, T ya, Ty yb, size_t yN) const;
+
+    template<typename X, typename Y, typename F>
+    T operator()( const X &x, const Y &y, const F &f ) const;
+};
+}
+```
+
+### 2D Gaussian-Legandre Quadrature
+
+```cpp
+namespace _2D {
+namespace GQ {
+
+template<typename T, size_t Order> // Order = 8, 16, 32, or 64
+class GaussLegendreQuadrature
+{
+  public:
+    // This version will integrate a callable between two points
+    template<typename F>
+    T operator()( F f, T xa, T xb, T ya, T yb ) const;
 };
 }
 }

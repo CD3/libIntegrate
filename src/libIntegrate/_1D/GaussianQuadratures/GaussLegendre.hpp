@@ -30,9 +30,11 @@ class GaussLegendreQuadrature_imp
     template<template <typename,std::size_t> class Class, typename T, std::size_t Order>
     struct GetOrder<Class<T,Order>> { static const std::size_t value = Order; };
 
+    using DataType = typename GetType<Derived>::type;
+
     // This version will integrate a callable between two points
-    template<typename F, typename X>
-    typename GetType<Derived>::type operator()( F f, X a, X b ) const
+    template<typename F>
+    DataType operator()( F f, DataType a, DataType b ) const
     {
       static auto x = Derived::getX();
       static auto w = Derived::getW();

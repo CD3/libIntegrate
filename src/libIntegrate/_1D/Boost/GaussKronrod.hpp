@@ -20,14 +20,14 @@ template<typename T, std::size_t Order>
 class GaussKronrodQuadrature{
   public:
     
-    template<typename F, typename X>
-    auto operator()(F f, X a, X b, unsigned max_depth, T tol, T* error, T* pL1) const -> T
+    template<typename F>
+    auto operator()(F f, T a, T b, unsigned max_depth, T tol, T* error, T* pL1) const -> T
     {
       return boost::math::quadrature::gauss_kronrod<T,Order>::integrate(f,a,b,max_depth,tol,error,pL1);
     }
 
-    template<typename F, typename X>
-    auto operator()(F f, X a, X b) const -> T
+    template<typename F>
+    auto operator()(F f, T a, T b) const -> T
     {
       return boost::math::quadrature::gauss_kronrod<T,Order>::integrate(f,a,b);
     }
