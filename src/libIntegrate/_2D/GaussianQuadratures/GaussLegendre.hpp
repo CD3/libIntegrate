@@ -1,5 +1,4 @@
 #pragma once
-#include<cstddef>
 
 /** @file GaussLegendre.hpp
   * @brief 
@@ -7,6 +6,7 @@
   * @date 08/04/17
   */
 
+#include<cstddef>
 #include<array>
 #include "../../_1D/GaussianQuadratures/GaussLegendre.hpp"
 
