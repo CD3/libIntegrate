@@ -103,28 +103,30 @@ class SimpsonRule
   template<typename Y>
   auto operator()( const Y &y, T dx = 1 ) const -> decltype(libIntegrate::getSize(y),dx*libIntegrate::getElement(y,0),T())
   {
+    using libIntegrate::getSize;
+    using libIntegrate::getElement;
     T sum = 0;
-    decltype(y.size()) i;
+    decltype(getSize(y)) i;
 
-    for(i = 0; i < y.size()-2; i+=2)
+    for(i = 0; i < getSize(y)-2; i+=2)
     {
-      sum += y[i] + 4*y[i+1] + y[i+2];
+      sum += getElement(y,i) + 4*getElement(y,i+1) + getElement(y,i+2);
     }
     sum *= dx/3.;
 
     // if the container size is even, there will be one extra interval we need to handle
-    if( y.size() % 2 == 0)
+    if( getSize(y) % 2 == 0)
     {
       // use the last three points to interpolate
       // the function to the midpoint of the last two
       // points. Then apply Simpson's rule
       // clang format off
-      i = y.size()-3;
-      T ym = y[i  ]*LagrangePolynomial(3.*dx/2 , dx , 2*dx , 0  )
-           + y[i+1]*LagrangePolynomial(3.*dx/2 , 0  , 2*dx , dx )
-           + y[i+2]*LagrangePolynomial(3.*dx/2 , 0  , dx   , 2*dx);
+      i = getSize(y)-3;
+      T ym = getElement(y,i  )*LagrangePolynomial(3.*dx/2 , dx , 2*dx , 0  )
+           + getElement(y,i+1)*LagrangePolynomial(3.*dx/2 , 0  , 2*dx , dx )
+           + getElement(y,i+2)*LagrangePolynomial(3.*dx/2 , 0  , dx   , 2*dx);
 
-      sum += dx/6 * (y[i+1] + 4*ym + y[i+2]);
+      sum += dx/6 * (getElement(y,i+1) + 4*ym + getElement(y,i+2));
       // clang format on
     }
 

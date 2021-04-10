@@ -87,6 +87,11 @@ TEST_CASE("Test the 2D discretized integration wrapper")
       _2D::SimpsonRule<double> integrate;
       CHECK(integrate(x,y,f) == Approx(1).epsilon(0.0000001));
     }
+    SECTION("Simpson (Uniform)")
+    {
+      _2D::SimpsonRule<double> integrate;
+      CHECK(integrate(f,dx,dy) == Approx(1).epsilon(0.0000001));
+    }
 
   }
 }

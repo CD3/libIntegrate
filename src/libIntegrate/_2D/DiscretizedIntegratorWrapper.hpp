@@ -31,7 +31,7 @@ class DiscretizedIntegratorWrapper
     DiscretizedIntegratorWrapper(Args&& ...args):integrate(std::forward<Args>(args)...) {}
 
     template<typename X, typename Y, typename F>
-    auto operator()( const X &x, const Y &y, const F &f ) const -> decltype(DataType())
+    auto operator()( const X &x, const Y &y, const F &f ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getSize(y),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),libIntegrate::getElement(f,0,0),DataType())
     {
       using libIntegrate::getSize;
       using libIntegrate::getElement;
@@ -41,6 +41,20 @@ class DiscretizedIntegratorWrapper
         sums[i] = integrate(y, [&f,i](std::size_t j){ return getElement(f,i,j); });
       }
       return integrate(x,sums);
+    }
+
+    template<typename F>
+    auto operator()( const F &f, DataType dx, DataType dy ) const -> decltype(libIntegrate::getSizeX(f),libIntegrate::getSizeY(f),libIntegrate::getElement(f,0,0),DataType())
+    {
+      using libIntegrate::getSizeX;
+      using libIntegrate::getSizeY;
+      using libIntegrate::getElement;
+      std::vector<DataType> sums(getSizeX(f));
+      for(std::size_t i = 0; i < sums.size(); ++i)
+      {
+        sums[i] = integrate(  _1D::RandomAccessLambda( [&f,i](std::size_t j){return f[i][j];}, [&f](){return libIntegrate::getSizeY(f);}), dy);
+      }
+      return integrate(sums,dx);
     }
 
     template<typename F>
