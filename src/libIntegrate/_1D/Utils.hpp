@@ -33,7 +33,7 @@ namespace libIntegrate {
     template<typename C>
     auto getSize(const C& c, priority<1>) -> decltype(c.COULD_NOT_DETECT_METHOD_FOR_GETTING_CONTAINER_SIZE)
     {
-      static_assert( always_false<C>::value, "Could not detect a method for obtaining the size of the container. The container must provide either .size() or .length()." );
+      static_assert( always_false<C>::value, "Could not detect a method for obtaining the size of the container. The container must provide either .size(), .length(), or .rows()." );
     }
 
     template<typename C>
@@ -46,6 +46,12 @@ namespace libIntegrate {
     auto getSize(const C& c, priority<2>) -> decltype(c.length())
     {
       return c.length();
+    }
+
+    template<typename C>
+    auto getSize(const C& c, priority<2>) -> decltype(c.rows())
+    {
+      return c.rows();
     }
 
   }

@@ -11,9 +11,10 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <Interp.hpp>
+#include <libInterpolate/Interpolate.hpp>
 
-#include "Integrate.hpp"
+#include "libIntegrate/Integrate.hpp"
+#include "libIntegrate/libIntegrate_version.h"
 
 using namespace std;
 namespace po = boost::program_options;
