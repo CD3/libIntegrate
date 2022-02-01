@@ -1,5 +1,8 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch.hpp"
+#include <iostream>
+#include <numeric>
+#include <algorithm>
 
 #include <libIntegrate/_1D/RiemannRule.hpp>
 #include <libIntegrate/_2D/RiemannRule.hpp>
@@ -149,3 +152,36 @@ TEST_CASE( "Riemann Benchmarks", "[.][bencharmks]" ) {
 
 }
 
+TEST_CASE( "1D Riemann rule with Algorithms." ) {
+
+  size_t N = 1000;
+  std::vector<double> x(N),y(N);
+  for(size_t i = 0; i < N; i++)
+  {
+    x[i] = 1e-6*i*i; y[i] = i+1;
+  }
+
+  _1D::RiemannRule<double> integrate;
+  double I;
+
+  I = integrate(x,y);
+
+  std::cout << I << std::endl;
+
+  std::vector<double> tmp(N);
+  std::adjacent_difference(std::begin(x),std::prev(std::end(x)),std::begin(tmp));
+  
+  std::cout << "\n";
+  std::copy( std::begin(x), std::begin(x)+3, std::ostream_iterator<double>(std::cout, " "));
+  std::cout << "\n";
+  std::copy( std::begin(tmp), std::begin(tmp)+3, std::ostream_iterator<double>(std::cout, " "));
+  std::cout << "\n";
+
+
+
+
+
+
+
+  
+}
