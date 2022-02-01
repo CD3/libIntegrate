@@ -13,8 +13,9 @@
 
 #include <libInterpolate/Interpolate.hpp>
 
-#include "libIntegrate/Integrate.hpp"
-#include "libIntegrate/libIntegrate_version.h"
+#include <libIntegrate/Integrate.hpp>
+#include <libIntegrate/libIntegrate_version.h>
+#include <libIntegrate/_1D/RandomAccessLambda.hpp>
 
 using namespace std;
 namespace po = boost::program_options;
@@ -106,6 +107,7 @@ int main( int argc, char* argv[])
       ("method,m"    , po::value<string>()->default_value("riemann"),     "integration method.")
       ("list,l"      ,                                                   "list available integration methods.")
       ("integrate-data" ,                                                "file containing data to be integrated.")
+      ("indefinate,i" ,                                                "compute the indefinate integral g(x) = \\int_a^x f(x') dx'.")
       ;
 
     po::positional_options_description args;
@@ -154,13 +156,13 @@ int main( int argc, char* argv[])
     ReadFunction( in, x, y, n );
     in.close();
 
-    std::function<double(std::vector<double>&,std::vector<double>&)> interp;
-    interp = create(vm["method"].as<string>());
-    if( !interp )
+    std::function<double(std::vector<double>&,std::vector<double>&)> integrate;
+    integrate = create(vm["method"].as<string>());
+    if( !integrate )
     {
       delete[] x;
       delete[] y;
-      cerr << "ERROR: Unrecognized interpolation method (" << vm["method"].as<string>()<< ")." << endl;
+      cerr << "ERROR: Unrecognized integration method (" << vm["method"].as<string>()<< ")." << endl;
       return 0;
     }
     
@@ -169,9 +171,24 @@ int main( int argc, char* argv[])
     delete[] x;
     delete[] y;
 
-    sum = interp(X,Y);
-
-    std::cout << sum << std::endl;
+    if(vm.count("indefinate"))
+    {
+      for( size_t n = 2; n <= X.size(); n++)
+      {
+        // this is unfortunate...
+        // need to build support for this in directly
+        std::vector<double> Xs(X.begin(), X.begin()+n);
+        std::vector<double> Ys(Y.begin(), Y.begin()+n);
+        sum = integrate(Xs,Ys);
+        std::cout << Xs[n-1] << " " << sum <<  "\n";
+      }
+      
+    }
+    else
+    {
+    sum = integrate(X,Y);
+    std::cout << sum << "\n";
+    }
   
     return 0;
 }
