@@ -25,12 +25,24 @@ class TrapezoidRule
 
     // This version will integrate a set of discrete points
     template<typename X, typename Y>
-    auto operator()( const X &x, const Y &y ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
+    auto operator()( const X &x, const Y &y, long ai = 0, long bi = -1 ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
     {
       using libIntegrate::getSize;
       using libIntegrate::getElement;
       T sum = 0;
-      for(decltype(getSize(x)) i = 0; i < getSize(x)-1; i++)
+
+      auto N = getSize(x);
+      if(N == 0)
+        return sum;
+
+      // support for negative indices.
+      // interpret -n to mean the N-n index
+      while( ai < 0 )
+        ai += N;
+      while( bi < 0 )
+        bi += N;
+
+      for(long i = ai; i < bi; i++)
         sum += (getElement(y,i+1)+getElement(y,i))*(getElement(x,i+1)-getElement(x,i));
       sum *= 0.5;
 

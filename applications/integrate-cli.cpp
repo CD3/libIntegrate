@@ -41,7 +41,7 @@ void print_documentation( )
       <<"\n";
 }
 
-std::function<double(std::vector<double>&,std::vector<double>&)> create(std::string type)
+std::function<double(std::vector<double>&,std::vector<double>&,long,long)> create(std::string type)
 {
   if( boost::starts_with("riemann",type) )
     return _1D::RiemannRule<double>();
@@ -50,47 +50,37 @@ std::function<double(std::vector<double>&,std::vector<double>&)> create(std::str
     return _1D::TrapezoidRule<double>();
 
   if( boost::starts_with("simpson",type) )
-    return [](std::vector<double>& x, std::vector<double>& y){
-      // create an interpolator to pass to the integrator
-      _1D::CubicSplineInterpolator<double> interp(x,y);
+    return _1D::SimpsonRule<double>();
 
-      double min = *std::min_element( x.begin(), x.end() );
-      double max = *std::max_element( x.begin(), x.end() );
+  // if( boost::starts_with("gauss-legendre",type) )
+  //   return [](std::vector<double>& x, std::vector<double>& y){
+  //     // create an interpolator to pass to the integrator
+  //     _1D::CubicSplineInterpolator<double> interp(x,y);
 
-      _1D::SimpsonRule<double> integ;
+  //     double min = *std::min_element( x.begin(), x.end() );
+  //     double max = *std::max_element( x.begin(), x.end() );
 
-      return integ( interp, min, max, x.size() );
-    };
+  //     // we have quadratures of order
+  //     // 8, 16, 32, and 64.
+  //     if( x.size() <= 8 )
+  //     {
+  //       _1D::GQ::GaussLegendreQuadrature<double,8> integ;
+  //       return integ( interp, min, max );
+  //     }
+  //     if( x.size() <= 16 )
+  //     {
+  //       _1D::GQ::GaussLegendreQuadrature<double,16> integ;
+  //       return integ( interp, min, max );
+  //     }
+  //     if( x.size() <= 32 )
+  //     {
+  //       _1D::GQ::GaussLegendreQuadrature<double,32> integ;
+  //       return integ( interp, min, max );
+  //     }
 
-  if( boost::starts_with("gauss-legendre",type) )
-    return [](std::vector<double>& x, std::vector<double>& y){
-      // create an interpolator to pass to the integrator
-      _1D::CubicSplineInterpolator<double> interp(x,y);
-
-      double min = *std::min_element( x.begin(), x.end() );
-      double max = *std::max_element( x.begin(), x.end() );
-
-      // we have quadratures of order
-      // 8, 16, 32, and 64.
-      if( x.size() <= 8 )
-      {
-        _1D::GQ::GaussLegendreQuadrature<double,8> integ;
-        return integ( interp, min, max );
-      }
-      if( x.size() <= 16 )
-      {
-        _1D::GQ::GaussLegendreQuadrature<double,16> integ;
-        return integ( interp, min, max );
-      }
-      if( x.size() <= 32 )
-      {
-        _1D::GQ::GaussLegendreQuadrature<double,32> integ;
-        return integ( interp, min, max );
-      }
-
-      _1D::GQ::GaussLegendreQuadrature<double,64> integ;
-      return integ( interp, min, max );
-    };
+  //     _1D::GQ::GaussLegendreQuadrature<double,64> integ;
+  //     return integ( interp, min, max );
+  //   };
 
   return nullptr;
 }
@@ -156,7 +146,7 @@ int main( int argc, char* argv[])
     ReadFunction( in, x, y, n );
     in.close();
 
-    std::function<double(std::vector<double>&,std::vector<double>&)> integrate;
+    std::function<double(std::vector<double>&,std::vector<double>&,long,long)> integrate;
     integrate = create(vm["method"].as<string>());
     if( !integrate )
     {
@@ -173,20 +163,16 @@ int main( int argc, char* argv[])
 
     if(vm.count("indefinate"))
     {
-      for( size_t n = 2; n <= X.size(); n++)
+      for( size_t n = 1; n < X.size(); n++)
       {
-        // this is unfortunate...
-        // need to build support for this in directly
-        std::vector<double> Xs(X.begin(), X.begin()+n);
-        std::vector<double> Ys(Y.begin(), Y.begin()+n);
-        sum = integrate(Xs,Ys);
-        std::cout << Xs[n-1] << " " << sum <<  "\n";
+        sum = integrate(X,Y,0,n);
+        std::cout << X[n] << " " << sum <<  "\n";
       }
       
     }
     else
     {
-    sum = integrate(X,Y);
+    sum = integrate(X,Y,0,-1);
     std::cout << sum << "\n";
     }
   

@@ -36,13 +36,26 @@ class SimpsonRule
    * othersize the call is undefined behavior.
    */
   template<typename X, typename Y>
-  auto operator()( const X &x, const Y &y ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
+  auto operator()( const X &x, const Y &y, long ai = 0, long bi = -1 ) const -> decltype(libIntegrate::getSize(x),libIntegrate::getElement(x,0),libIntegrate::getElement(y,0),T())
   {
     using libIntegrate::getSize;
     using libIntegrate::getElement;
+
     T sum = 0;
-    decltype(getSize(x)) i;
-    for (i = 0; i < getSize(x) - 2; i += 2) {
+
+    auto N = getSize(x);
+    if(N == 0)
+      return sum;
+
+    // support for negative indices.
+    // interpret -n to mean the N-n index
+    while( ai < 0 )
+      ai += N;
+    while( bi < 0 )
+      bi += N;
+
+    long i;
+    for (i = ai; i < bi - 1; i += 2) {
       // Integrate segment using three points
       // \int_a^b f(x) dx = (b-a)/6 [ f(a) + 4*f(m) + f(b) ]
       // a = x[i]
@@ -68,12 +81,15 @@ class SimpsonRule
       // clang-format on
     }
 
-    if( getSize(x) % 2 == 0) // note: this tests if the last *index* is odd. the size will be even.
+    // if the number of elements in the range that was integrated
+    // is even, then there will be one element at the end that has not
+    // been integrated yet.
+    if( (bi+1-ai) % 2 == 0)
     {
-      // there is on extra point at the end we need to handle
+      // there is one extra point at the end we need to handle
       // we will use the last *three* points to fit the polynomial
       // but then integrate between the last *two* points.
-      i = getSize(x)-3;
+      i = bi-2;
       auto x1 = getElement(x,i);
       auto x2 = getElement(x,i+1);
       auto x3 = getElement(x,i+2);

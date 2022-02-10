@@ -9,3 +9,5 @@ set_property( TARGET integrate-cli PROPERTY CXX_STANDARD 11 )
 
 add_subdirectory( .. libIntegrate )
 #configure_file( ../testing/CramTests/integrate-cli.t ${CMAKE_CURRENT_BINARY_DIR}/integrate-cli.t COPYONLY )
+
+install( TARGETS integrate-cli )

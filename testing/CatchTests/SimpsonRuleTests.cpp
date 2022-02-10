@@ -101,6 +101,18 @@ TEST_CASE("Simpson rule on discretized functions.")
     I = integrate(x, f);
     CHECK(I == Approx(10 * 10 * 10 / 3. + 10 * 10 + 3 * 10 - 1 * 1 * 1 / 3. -
                       1 * 1 - 3 * 1));
+
+    I = integrate(x, f, 0,2);
+    CHECK(I == Approx(8 * 8* 8 / 3. + 8 * 8 + 3 * 8 - 1 * 1 * 1 / 3. -
+                      1 * 1 - 3 * 1));
+
+    I = integrate(x, f, 2, 4);
+    CHECK(I == Approx(10 * 10* 10 / 3. + 10 * 10 + 3 * 10 - 8 * 8 * 8 / 3. -
+                      8 * 8 - 3 * 8));
+
+    I = integrate(x, f, 1, -2);
+    CHECK(I == Approx(9 * 9* 9 / 3. + 9 * 9 + 3 * 9 - 3 * 3 * 3 / 3. -
+                      3 * 3 - 3 * 3));
   }
 
   SECTION("Single-vector dataset")

@@ -74,6 +74,21 @@ TEST_CASE( "Testing Trapezoid rule on discrete set." ) {
   {
     I = integrate( x, y );
     REQUIRE( I == Approx( 4 ) );
+
+    I = integrate( x, y, 0, 1 );
+    REQUIRE( I == Approx( 0.625 ) );
+
+    I = integrate( x, y, 1, 2 );
+    REQUIRE( I == Approx( 3.375 ) );
+
+    I = integrate( x, y, 0, -2 );
+    REQUIRE( I == Approx( 0.625 ) );
+
+    I = integrate( x, y, -3, -2 );
+    REQUIRE( I == Approx( 0.625 ) );
+
+
+
   }
 
   SECTION("Single vector data")

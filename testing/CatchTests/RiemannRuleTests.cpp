@@ -70,6 +70,19 @@ TEST_CASE( "Testing 1D Riemann rule on discrete set." ) {
   {
     I = integrate( x, y );
     REQUIRE( I == Approx( 3 ) );
+
+    I = integrate( x, y, 0, 1 );
+    REQUIRE( I == Approx( 1 ) );
+
+    I = integrate( x, y, 1, 2 );
+    REQUIRE( I == Approx( 2 ) );
+
+    I = integrate( x, y, 0, -2 );
+    REQUIRE( I == Approx( 1 ) );
+
+    I = integrate( x, y, -3, -2 );
+    REQUIRE( I == Approx( 1 ) );
+
   }
   
 
