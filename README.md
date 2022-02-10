@@ -94,11 +94,11 @@ $ cmake ..
 $ cmake --build . --target install
 ```
 
-Conan packages are also provided. To install the library with conan, add the remote https://cd3.jfrog.io/artifactory/api/conan/cd3-conan and include `libintegrate/VERSION@cd3/devel` to
+Conan packages are also provided. To install the library with conan, add the remote `https://cdc3.jfrog.io/artifactory/api/conan/default-conan` and include `libintegrate/VERSION@cd3/devel` to
 you `conanfile.txt` or `conanfile.py`.
 ```
-$ conan remote add cd3-conan https://cd3.jfrog.io/artifactory/api/conan/cd3-conan
-$ conan search -r cd3-conan # list all packages
+$ conan remote add cd3 https://cdc3.jfrog.io/artifactory/api/conan/default-conan
+$ conan search -r cd3 # list all packages
 ```
 
 ## Overview
