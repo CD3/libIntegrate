@@ -52,35 +52,38 @@ std::function<double(std::vector<double>&,std::vector<double>&,long,long)> creat
   if( boost::starts_with("simpson",type) )
     return _1D::SimpsonRule<double>();
 
-  // if( boost::starts_with("gauss-legendre",type) )
-  //   return [](std::vector<double>& x, std::vector<double>& y){
-  //     // create an interpolator to pass to the integrator
-  //     _1D::CubicSplineInterpolator<double> interp(x,y);
+  if( boost::starts_with("gauss-legendre",type) )
+    return [](std::vector<double>& x, std::vector<double>& y,long ai, long bi){
+      // create an interpolator to pass to the integrator
+      _1D::CubicSplineInterpolator<double> interp(x,y);
 
-  //     double min = *std::min_element( x.begin(), x.end() );
-  //     double max = *std::max_element( x.begin(), x.end() );
+      while(bi < 0)
+        bi += x.size();
 
-  //     // we have quadratures of order
-  //     // 8, 16, 32, and 64.
-  //     if( x.size() <= 8 )
-  //     {
-  //       _1D::GQ::GaussLegendreQuadrature<double,8> integ;
-  //       return integ( interp, min, max );
-  //     }
-  //     if( x.size() <= 16 )
-  //     {
-  //       _1D::GQ::GaussLegendreQuadrature<double,16> integ;
-  //       return integ( interp, min, max );
-  //     }
-  //     if( x.size() <= 32 )
-  //     {
-  //       _1D::GQ::GaussLegendreQuadrature<double,32> integ;
-  //       return integ( interp, min, max );
-  //     }
+      double min = x[ai];
+      double max = x[bi];
 
-  //     _1D::GQ::GaussLegendreQuadrature<double,64> integ;
-  //     return integ( interp, min, max );
-  //   };
+      // we have quadratures of order
+      // 8, 16, 32, and 64.
+      if( bi - ai <= 8 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,8> integ;
+        return integ( interp, min, max );
+      }
+      if( bi - ai  <= 16 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,16> integ;
+        return integ( interp, min, max );
+      }
+      if( bi - ai  <= 32 )
+      {
+        _1D::GQ::GaussLegendreQuadrature<double,32> integ;
+        return integ( interp, min, max );
+      }
+
+      _1D::GQ::GaussLegendreQuadrature<double,64> integ;
+      return integ( interp, min, max );
+    };
 
   return nullptr;
 }
@@ -96,8 +99,8 @@ int main( int argc, char* argv[])
       ("batch,b"     , "output in 'batch' mode")
       ("method,m"    , po::value<string>()->default_value("riemann"),     "integration method.")
       ("list,l"      ,                                                   "list available integration methods.")
-      ("integrate-data" ,                                                "file containing data to be integrated.")
       ("indefinate,i" ,                                                "compute the indefinate integral g(x) = \\int_a^x f(x') dx'.")
+      ("integrate-data" , po::value<string>()->default_value("-"),        "file containing data to be integrated.")
       ;
 
     po::positional_options_description args;
@@ -136,7 +139,15 @@ int main( int argc, char* argv[])
     int n;
 
     // load data
-    in.open( vm["integrate-data"].as<string>().c_str() );
+    if( vm["integrate-data"].as<string>() == "-" )
+    {
+      in.open("/dev/stdin");
+    }
+    else
+    {
+      in.open( vm["integrate-data"].as<string>().c_str() );
+    }
+
     if( !in.is_open() )
     {
       cerr << "ERROR: could not open file: "<<vm["integrate-data"].as<string>()<< endl;
