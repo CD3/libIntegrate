@@ -209,6 +209,38 @@ CHECK( integrate( f, 0., 1. )  == Approx( 1 + 1/2. + 1/3. + 1/4. - 1 ) );
 
 ```
 
+Two-dimensional discretized functions can also be integrated. The 2D integrators that support discretized
+functions take the arguments. The first two are 1D containers of the x and y coordinates, the third is a 2D container
+of the function values. For example:
+
+```
+  _2D::TrapezoidRule<double> integrate;
+  double                     I;
+
+  // create a discretized version of sin(x)*sin(y) to integrate.
+  // probably not the best way to create an initialize the function...
+  std::vector<double>              x(100), y(200);
+  std::vector<std::vector<double>> f(100);
+  for(size_t i = 0; i < x.size(); i++) {
+      x[i] = i * (M_PI / 2) / (x.size() - 1);
+  }
+  for(size_t i = 0; i < y.size(); i++) {
+      y[i] = i * (M_PI / 2) / (y.size() - 1);
+  }
+
+  for(size_t i = 0; i < f.size(); i++) {
+      f[i] = std::vector<double>(200);
+      for(size_t j = 0; j < f[i].size(); j++) {
+        f[i][j] = sin(x[i]) * sin(y[j]);
+      }
+  }
+
+  // now integrate
+  I = integrate(x, y, f);
+```
+We could also use more efficient 2D container here, like an Eigen matrix. Any container that we can access the elements of with either  `f(i,j)` or `f[i][j]` will work.
+
+
 
 ### Weighted Integrals
 
