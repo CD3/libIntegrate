@@ -141,6 +141,8 @@ _1D::RiemannRule<double> integrage;
 
 double I = integrate(x,f); // I \approx 2
 ```
+**Note: Discretized functions must be sorted with respect to the independent variable (`x` in this example).**
+
 Each method is implemented in a class. To use a different method, instantiate the corresponding class.
 ```
 _1D::TrapezoidRule<double> trap_integrage;
