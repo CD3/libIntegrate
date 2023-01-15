@@ -7,8 +7,7 @@ include(CMakePrintHelpers)
 
 option(BUILD_TESTS "Build unit tests" ON)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-                      "${CMAKE_SOURCE_DIR}/cmake/Modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 include(macro-git_version)
 git_version(libIntegrate)
 message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
@@ -35,7 +34,7 @@ target_include_directories(
 target_sources(
   Integrate
   INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Integrate.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Integrate.hpp>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Utils.hpp>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/RiemannRule.hpp>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/TrapezoidRule.hpp>
@@ -90,8 +89,7 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
 install(
   FILES ${CMAKE_BINARY_DIR}/libIntegrateConfig.cmake
-        ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake
-  DESTINATION cmake)
+        ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
 include(InstallRequiredSystemLibraries)
 
