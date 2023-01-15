@@ -1,133 +1,112 @@
-cmake_minimum_required( VERSION 3.14 )
-
-if( TARGET libIntegrate )
-  return()
-endif( TARGET libIntegrate )
-
-if( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR} )
-  set(STANDALONE ON)
-endif( )
-
-option( BUILD_TESTS "Build unit tests" ON )
-if( ${BUILD_TESTS} )
-enable_testing()
-endif()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
+cmake_minimum_required(VERSION 3.16)
 project(libIntegrate)
+
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+include(CMakePrintHelpers)
+
+option(BUILD_TESTS "Build unit tests" ON)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+                      "${CMAKE_SOURCE_DIR}/cmake/Modules")
 include(macro-git_version)
-GIT_VERSION(libIntegrate)
-message( STATUS "libIntegrate version: ${${PROJECT_NAME}_VERSION}")
+git_version(libIntegrate)
+message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
+
+find_package(Boost REQUIRED)
 
 # need to run configure_file twice
-configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}_version.h.in"
-                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h")
-configure_file( "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h"
-                "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.h")
+configure_file(
+  "${CMAKE_SOURCE_DIR}/src/libIntegrate/libIntegrate_version.h.in"
+  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h")
+configure_file(
+  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h"
+  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h")
 
+add_library(Integrate INTERFACE)
+add_library(libIntegrate::Integrate ALIAS Integrate)
+target_include_directories(
+  Integrate
+  INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-find_package( Boost REQUIRED )
-
-string( REGEX REPLACE "^lib" "" LIB_NAME ${PROJECT_NAME} )
-add_library( ${LIB_NAME} INTERFACE )
-add_library( ${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME} )
-target_include_directories( ${LIB_NAME} INTERFACE
-  $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/src>
-  $<BUILD_INTERFACE:${${PROJECT_NAME}_BINARY_DIR}/include>
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-)
 target_sources(
-  ${LIB_NAME}
+  Integrate
   INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Integrate.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Utils.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/RiemannRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/TrapezoidRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/SimpsonRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/GaussianQuadratures/GaussLegendre.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/RandomAccessLambda.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/Utils.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/RiemannRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/TrapezoidRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/SimpsonRule.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/Boost/GaussKronrod.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/RandomAccessLambda.hpp>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/Utils.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/Utils.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/RiemannRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/TrapezoidRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/SimpsonRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/GaussianQuadratures/GaussLegendre.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/RandomAccessLambda.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_2D/Utils.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/RiemannRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/TrapezoidRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/SimpsonRule.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/GaussianQuadratures/GaussLegendre.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/Boost/GaussKronrod.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/RandomAccessLambda.hpp>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/_1D/Utils.hpp>
 )
 
-target_link_libraries(${LIB_NAME} INTERFACE Boost::boost)
-target_compile_features( ${LIB_NAME} INTERFACE cxx_std_11 )
+target_link_libraries(Integrate INTERFACE Boost::boost)
+target_compile_features(Integrate INTERFACE cxx_std_11)
 
-if( STANDALONE AND BUILD_TESTS )
-add_subdirectory( testing )
+if(BUILD_TESTS)
+  add_subdirectory(testing)
 endif()
 
+install(TARGETS Integrate EXPORT libIntegrateTargets)
 
-
-
-
-
-
-
-install( TARGETS ${LIB_NAME} EXPORT ${PROJECT_NAME}Targets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include/${PROJECT_NAME}
-)
-install(DIRECTORY src/
-  DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
-)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
-  DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
-)
-install(EXPORT ${PROJECT_NAME}Targets
-  FILE ${PROJECT_NAME}Targets.cmake
-  NAMESPACE ${PROJECT_NAME}::
-  DESTINATION cmake
-)
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-"include(CMakeFindDependencyMacro)
+install(
+  DIRECTORY src/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING
+  PATTERN "*.hpp"
+  PATTERN "*.h")
+install(
+  DIRECTORY ${CMAKE_BINARY_DIR}/include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING
+  PATTERN "*.hpp"
+  PATTERN "*.h")
+install(
+  EXPORT libIntegrateTargets
+  FILE libIntegrateTargets.cmake
+  NAMESPACE libIntegrate::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+file(
+  WRITE ${CMAKE_BINARY_DIR}/libIntegrateConfig.cmake
+  "include(CMakeFindDependencyMacro)
 find_dependency(Boost)
-include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)
-"
-)
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  VERSION ${${PROJECT_NAME}_VERSION}
-  COMPATIBILITY SameMajorVersion
-  ARCH_INDEPENDENT
-)
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION cmake
-)
+include(\${CMAKE_CURRENT_LIST_DIR}/libIntegrateTargets.cmake)
+")
+write_basic_package_version_file(
+  ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake
+  VERSION ${libIntegrate_VERSION}
+  COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
+install(
+  FILES ${CMAKE_BINARY_DIR}/libIntegrateConfig.cmake
+        ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake
+  DESTINATION cmake)
 
+include(InstallRequiredSystemLibraries)
 
-
-
-INCLUDE(InstallRequiredSystemLibraries)
-
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A C++ library for numerical integration.")
-SET(CPACK_PACKAGE_VENDOR "C.D. Clark III")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
-if( ${PROJECT_NAME}_VERSION_MAJOR)
-  SET(CPACK_PACKAGE_VERSION_MAJOR ${${PROJECT_NAME}_VERSION_MAJOR})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
+    "A C++ library for numerical integration.")
+set(CPACK_PACKAGE_VENDOR "C.D. Clark III")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.md")
+if(libIntegrate_VERSION_MAJOR)
+  set(CPACK_PACKAGE_VERSION_MAJOR ${libIntegrate_VERSION_MAJOR})
 endif()
-if( ${PROJECT_NAME}_VERSION_MINOR)
-  SET(CPACK_PACKAGE_VERSION_MINOR ${${PROJECT_NAME}_VERSION_MINOR})
+if(libIntegrate_VERSION_MINOR)
+  set(CPACK_PACKAGE_VERSION_MINOR ${libIntegrate_VERSION_MINOR})
 endif()
-if( ${PROJECT_NAME}_VERSION_PATCH)
-  SET(CPACK_PACKAGE_VERSION_PATCH ${${PROJECT_NAME}_VERSION_PATCH})
+if(libIntegrate_VERSION_PATCH)
+  set(CPACK_PACKAGE_VERSION_PATCH ${libIntegrate_VERSION_PATCH})
 endif()
-INCLUDE(CPack)
-
-
-
+include(CPack)
