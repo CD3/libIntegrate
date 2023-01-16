@@ -13,6 +13,30 @@
 - Apply lazy transformations to discrete data before integrating. Useful for computing weighted integrals.
 
 
+Table of Contents
+=================
+
+* [Description](#description)
+* [Usage](#usage)
+   * [Installing](#installing)
+   * [Overview](#overview)
+   * [Examples](#examples)
+      * [Discretized Functions](#discretized-functions)
+      * [Callable Functions](#callable-functions)
+      * [Weighted Integrals](#weighted-integrals)
+   * [Implemented Methods](#implemented-methods)
+      * [1D Riemann's Rule](#1d-riemanns-rule)
+      * [1D Trapezoid Rule](#1d-trapezoid-rule)
+      * [1D Simpson's Rule](#1d-simpsons-rule)
+      * [1D Gaussian-Legandre Quadrature](#1d-gaussian-legandre-quadrature)
+      * [1D Gaussian-Kronrod Quadrature](#1d-gaussian-kronrod-quadrature)
+      * [2D Riemann's Rule](#2d-riemanns-rule)
+      * [2D Trapezoid Rule](#2d-trapezoid-rule)
+      * [2D Simpson's Rule](#2d-simpsons-rule)
+      * [2D Gaussian-Legandre Quadrature](#2d-gaussian-legandre-quadrature)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+
 
 # Description
 
