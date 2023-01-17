@@ -7,20 +7,15 @@ include(CMakePrintHelpers)
 
 option(BUILD_TESTS "Build unit tests" ON)
 
+set(libIntegrate_VERSION "UNKNOWN" CACHE STRING "Library version number")
+set(libIntegrate_VERSION $CACHE{libIntegrate_VERSION} )
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 include(macro-git_version)
 git_version(libIntegrate)
 message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
 
 find_package(Boost REQUIRED)
-
-# need to run configure_file twice
-configure_file(
-  "${CMAKE_SOURCE_DIR}/src/libIntegrate/libIntegrate_version.h.in"
-  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h")
-configure_file(
-  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h"
-  "${CMAKE_BINARY_DIR}/include/libIntegrate/libIntegrate_version.h")
 
 add_library(Integrate INTERFACE)
 add_library(libIntegrate::Integrate ALIAS Integrate)
