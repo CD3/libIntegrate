@@ -1,12 +1,6 @@
 # A function 
 function( GIT_VERSION VAR_PREFIX)
 
-set( GIT_INFO ID AUTHOR DATE BRANCH DESC )
-
-set( GIT_COMMIT_ID_DEFAULT      "UNKNOWN" )
-set( GIT_COMMIT_AUTHOR_DEFAULT  "UNKNOWN" )
-set( GIT_COMMIT_DATE_DEFAULT    "UNKNOWN" )
-set( GIT_COMMIT_BRANCH_DEFAULT  "UNKNOWN" )
 set( GIT_COMMIT_DESC_DEFAULT    "None" )
 
 # we need git of course...
@@ -19,34 +13,10 @@ if( GIT_FOUND )
                    OUTPUT_VARIABLE OutputTrash
                    ERROR_VARIABLE ErrorTrash)
 else()
-  message( FATAL_ERROR "Could not find git command" )
+  message( FATAL_ERROR "Could not find `git` command, cannot determine version number. Please set the `${VAR_PREFIX}_VERSION` cache variable." )
 endif()
 
 if( ${IsGitRepo} EQUAL 0 )
-    if( "${GIT_COMMIT_ID}" STREQUAL "" )
-      execute_process( COMMAND ${GIT_EXECUTABLE} rev-parse --sq HEAD 
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                       OUTPUT_VARIABLE GIT_COMMIT_ID
-                       ERROR_VARIABLE Trash)
-    endif()
-    if( "${GIT_COMMIT_AUTHOR}" STREQUAL "" )
-      execute_process( COMMAND ${GIT_EXECUTABLE} log -n1 --pretty="%an" HEAD
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                       OUTPUT_VARIABLE GIT_COMMIT_AUTHOR
-                       ERROR_VARIABLE Trash)
-    endif()
-    if( "${GIT_COMMIT_DATE}" STREQUAL "" )
-      execute_process( COMMAND ${GIT_EXECUTABLE} log -n1 --pretty="%aD" HEAD
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                       OUTPUT_VARIABLE GIT_COMMIT_DATE
-                       ERROR_VARIABLE Trash)
-    endif()
-    if( "${GIT_COMMIT_BRANCH}" STREQUAL "" )
-      execute_process( COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
-                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                       OUTPUT_VARIABLE GIT_COMMIT_BRANCH
-                       ERROR_VARIABLE Trash)
-    endif()
     if( "${GIT_COMMIT_DESC}" STREQUAL "" )
       execute_process( COMMAND ${GIT_EXECUTABLE} describe --tags HEAD
                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -54,45 +24,16 @@ if( ${IsGitRepo} EQUAL 0 )
                        ERROR_VARIABLE Trash)
     endif()
 else()
-  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
-    message( WARNING "Source directory is not a git repo, but 'version.txt' was found. Using version number there." )
-    if( "${GIT_COMMIT_ID}" STREQUAL "" )
-      set( GIT_COMMIT_ID "UNKNOWN" )
-    endif()
-    if( "${GIT_COMMIT_AUTHOR}" STREQUAL "" )
-      set( GIT_COMMIT_AUTHOR "UNKNOWN" )
-    endif()
-    if( "${GIT_COMMIT_DATE}" STREQUAL "" )
-      set( GIT_COMMIT_DATE "UNKNOWN" )
-    endif()
-    if( "${GIT_COMMIT_BRANCH}" STREQUAL "" )
-      set( GIT_COMMIT_BRANCH "UNKNOWN" )
-    endif()
-    if( "${GIT_COMMIT_DESC}" STREQUAL "" )
-      file( READ "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" GIT_COMMIT_DESC )
-    endif()
-  else()
-    message( FATAL_ERROR "Source directory is not a git repo." )
-endif()
+  message( FATAL_ERROR "Directory is not a Git repository, cannot determine version number. Please set the `${VAR_PREFIX}_VERSION` cache variable." )
 endif()
 
 # set defaults for any items that were not found
-foreach( item ${GIT_INFO} )
-  if( "${GIT_COMMIT_${item}}" STREQUAL "" )
-    set( GIT_COMMIT_${item} ${GIT_COMMIT_${item}_DEFAULT} )
-  endif()
-endforeach( item )
-
-# remove quotes, backslashes, and new lines
-# these cause problems when trying to embed version numbers into source files.
-foreach( item ${GIT_INFO} )
-  string( REPLACE "'"  "" GIT_COMMIT_${item}   ${GIT_COMMIT_${item}} )
-  string( REPLACE "\"" "" GIT_COMMIT_${item}   ${GIT_COMMIT_${item}} )
-  string( REPLACE "\n" "" GIT_COMMIT_${item}   ${GIT_COMMIT_${item}} )
-endforeach( item )
+if( "${GIT_COMMIT_DESC}" STREQUAL "" )
+  set( GIT_COMMIT_DESC ${GIT_COMMIT_DESC_DEFAULT} )
+endif()
 
 # set full version string
-set(VERSION_FULL "${GIT_COMMIT_DESC}-${GIT_COMMIT_BRANCH}" )
+set(VERSION_FULL "${GIT_COMMIT_DESC}" )
 
 # look for major, minor, and patch numbers in the version string
 # this is required if the developer uses CPack for example.
