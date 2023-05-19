@@ -5,6 +5,7 @@ set( buildDir ${CMAKE_BINARY_DIR} )
 set( binDir ${CMAKE_BINARY_DIR}/testBin )
 
 find_package(OpenMP)
+find_package(Catch2 REQUIRED)
 
 # Find all sources.
 file( GLOB_RECURSE unitTest_SOURCES
@@ -19,7 +20,7 @@ endforeach()
 set( testName ${PROJECT_NAME}_CatchTests )
 add_executable(${testName} ${unitTest_SOURCES})
 target_compile_definitions( ${testName} PRIVATE -DTESTING $<$<BOOL:${MSVC}>:_USE_MATH_DEFINES> )
-target_link_libraries(${testName} PRIVATE Integrate )
+target_link_libraries(${testName} PRIVATE Integrate Catch2::Catch2WithMain)
 if(OpenMP_CXX_FOUND)
   target_link_libraries(${testName} PRIVATE OpenMP::OpenMP_CXX)
 endif()

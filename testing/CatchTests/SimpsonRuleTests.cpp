@@ -1,9 +1,11 @@
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "catch.hpp"
+#include <iostream>
+#include <numeric>
 
-#include<iostream>
-#include<numeric>
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <libIntegrate/_1D/SimpsonRule.hpp>
+using namespace Catch;
 
 namespace SimpsonRuleTests
 {
@@ -11,8 +13,8 @@ double linear_func(double x) { return 2 * x + 3; }
 
 double box_func(double x)
 {
-  if (x < 1) return 0;
-  if (x <= 5) return 1;
+  if(x < 1) return 0;
+  if(x <= 5) return 1;
   return 0;
 }
 
@@ -60,7 +62,7 @@ TEST_CASE("Simpson rule on discretized functions.")
     x[1] = 3;
     x[2] = 10;
 
-    for (std::size_t i = 0; i < x.size(); ++i)
+    for(std::size_t i = 0; i < x.size(); ++i)
       f[i] = x[i] * x[i] + 2 * x[i] + 3;
 
     I = integrate(x, f);
@@ -78,7 +80,7 @@ TEST_CASE("Simpson rule on discretized functions.")
     x[2] = 8;
     x[3] = 10;
 
-    for (std::size_t i = 0; i < x.size(); ++i)
+    for(std::size_t i = 0; i < x.size(); ++i)
       f[i] = x[i] * x[i] + 2 * x[i] + 3;
 
     I = integrate(x, f);
@@ -95,23 +97,23 @@ TEST_CASE("Simpson rule on discretized functions.")
     x[3] = 9;
     x[4] = 10;
 
-    for (std::size_t i = 0; i < x.size(); ++i)
+    for(std::size_t i = 0; i < x.size(); ++i)
       f[i] = x[i] * x[i] + 2 * x[i] + 3;
 
     I = integrate(x, f);
     CHECK(I == Approx(10 * 10 * 10 / 3. + 10 * 10 + 3 * 10 - 1 * 1 * 1 / 3. -
                       1 * 1 - 3 * 1));
 
-    I = integrate(x, f, 0,2);
-    CHECK(I == Approx(8 * 8* 8 / 3. + 8 * 8 + 3 * 8 - 1 * 1 * 1 / 3. -
+    I = integrate(x, f, 0, 2);
+    CHECK(I == Approx(8 * 8 * 8 / 3. + 8 * 8 + 3 * 8 - 1 * 1 * 1 / 3. -
                       1 * 1 - 3 * 1));
 
     I = integrate(x, f, 2, 4);
-    CHECK(I == Approx(10 * 10* 10 / 3. + 10 * 10 + 3 * 10 - 8 * 8 * 8 / 3. -
+    CHECK(I == Approx(10 * 10 * 10 / 3. + 10 * 10 + 3 * 10 - 8 * 8 * 8 / 3. -
                       8 * 8 - 3 * 8));
 
     I = integrate(x, f, 1, -2);
-    CHECK(I == Approx(9 * 9* 9 / 3. + 9 * 9 + 3 * 9 - 3 * 3 * 3 / 3. -
+    CHECK(I == Approx(9 * 9 * 9 / 3. + 9 * 9 + 3 * 9 - 3 * 3 * 3 / 3. -
                       3 * 3 - 3 * 3));
   }
 
@@ -120,27 +122,27 @@ TEST_CASE("Simpson rule on discretized functions.")
     SECTION("5 point data set")
     {
       std::vector<double> f(5);
-      for (std::size_t i = 0; i < f.size(); ++i)
-        f[i] = i*i + 2*i + 3;
+      for(std::size_t i = 0; i < f.size(); ++i)
+        f[i] = i * i + 2 * i + 3;
 
       double I;
       I = integrate(f);
-      CHECK(I == Approx(4.*4.*4./3. + 2.*4.*4./2. + 3.*4.  ));
+      CHECK(I == Approx(4. * 4. * 4. / 3. + 2. * 4. * 4. / 2. + 3. * 4.));
     }
 
     SECTION("6 point data set")
     {
       std::vector<double> f(6);
-      for (std::size_t i = 0; i < f.size(); ++i)
-        f[i] = i*i + 2*i + 3;
+      for(std::size_t i = 0; i < f.size(); ++i)
+        f[i] = i * i + 2 * i + 3;
 
       double I;
       I = integrate(f);
-      CHECK(I == Approx(5.*5.*5./3. + 2.*5.*5./2. + 3.*5.  ));
-      I = integrate(f,0.1);
-      CHECK(I == Approx(0.1*(5.*5.*5./3. + 2.*5.*5./2. + 3.*5. )));
-      I = integrate(f,-0.1);
-      CHECK(I == Approx(-0.1*(5.*5.*5./3. + 2.*5.*5./2. + 3.*5. )));
+      CHECK(I == Approx(5. * 5. * 5. / 3. + 2. * 5. * 5. / 2. + 3. * 5.));
+      I = integrate(f, 0.1);
+      CHECK(I == Approx(0.1 * (5. * 5. * 5. / 3. + 2. * 5. * 5. / 2. + 3. * 5.)));
+      I = integrate(f, -0.1);
+      CHECK(I == Approx(-0.1 * (5. * 5. * 5. / 3. + 2. * 5. * 5. / 2. + 3. * 5.)));
     }
   }
 
@@ -151,7 +153,7 @@ TEST_CASE("Simpson rule on discretized functions.")
     x[1] = 3;
     x[2] = 10;
 
-    auto f = [&x](int i){ return  x[i] * x[i] + 2 * x[i] + 3; };
+    auto f = [&x](int i) { return x[i] * x[i] + 2 * x[i] + 3; };
 
     I = integrate(x, f);
     CHECK(I == Approx(10 * 10 * 10 / 3. + 10 * 10 + 3 * 10 - 1 * 1 * 1 / 3. -
@@ -159,12 +161,12 @@ TEST_CASE("Simpson rule on discretized functions.")
   }
 }
 
-TEST_CASE("Simpson rule benchmarks.","[.][benchmarks]")
+TEST_CASE("Simpson rule benchmarks.", "[.][benchmarks]")
 {
   _1D::SimpsonRule<double> integrate;
   SECTION("Even vs. Odd Datasets")
   {
-    std::vector<double> f1(5),f2(6),f3(201),f4(202);
+    std::vector<double> f1(5), f2(6), f3(201), f4(202);
     std::iota(f1.begin(), f1.end(), 0);
     std::iota(f2.begin(), f2.end(), 0);
     std::iota(f3.begin(), f3.end(), 0);
@@ -186,29 +188,28 @@ TEST_CASE("Simpson rule benchmarks.","[.][benchmarks]")
     {
       return integrate(f4);
     };
-
   }
   SECTION("Uniform vs. Non-Uniform Methods")
   {
-    std::vector<double> x1(5),x2(6),x3(201),x4(202);
-    std::vector<double> f1(5),f2(6),f3(201),f4(202);
+    std::vector<double> x1(5), x2(6), x3(201), x4(202);
+    std::vector<double> f1(5), f2(6), f3(201), f4(202);
     std::iota(x1.begin(), x1.end(), 0);
     std::iota(x2.begin(), x2.end(), 0);
     std::iota(x3.begin(), x3.end(), 0);
     std::iota(x4.begin(), x4.end(), 0);
 
     for(std::size_t i = 0; i < x1.size(); i++)
-      f1[i] = 0.1*x1[i];
+      f1[i] = 0.1 * x1[i];
     for(std::size_t i = 0; i < x2.size(); i++)
-      f2[i] = 0.1*x2[i];
+      f2[i] = 0.1 * x2[i];
     for(std::size_t i = 0; i < x3.size(); i++)
-      f3[i] = 0.1*x3[i];
+      f3[i] = 0.1 * x3[i];
     for(std::size_t i = 0; i < x4.size(); i++)
-      f4[i] = 0.1*x4[i];
+      f4[i] = 0.1 * x4[i];
 
     BENCHMARK("5 Point Non-Uniform")
     {
-      return integrate(x1,f1);
+      return integrate(x1, f1);
     };
     BENCHMARK("5 Point Uniform")
     {
@@ -217,34 +218,30 @@ TEST_CASE("Simpson rule benchmarks.","[.][benchmarks]")
 
     BENCHMARK("6 Point Non-Uniform")
     {
-      return integrate(x2,f2);
+      return integrate(x2, f2);
     };
     BENCHMARK("6 Point Uniform")
     {
       return integrate(f2);
     };
 
-
     BENCHMARK("201 Point Non-Uniform")
     {
-      return integrate(x3,f3);
+      return integrate(x3, f3);
     };
     BENCHMARK("201 Point Uniform")
     {
       return integrate(f3);
     };
 
-
     BENCHMARK("202 Point Non-Uniform")
     {
-      return integrate(x4,f4);
+      return integrate(x4, f4);
     };
     BENCHMARK("202 Point Uniform")
     {
-      return integrate(x4,f4);
+      return integrate(x4, f4);
     };
-
-
   }
 }
 

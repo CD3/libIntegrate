@@ -1,10 +1,12 @@
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "catch.hpp"
-
+#include <cmath>
 #include <numeric>
 
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <libIntegrate/_1D/TrapezoidRule.hpp>
 #include <libIntegrate/_2D/TrapezoidRule.hpp>
+using namespace Catch;
 
 namespace TrapeziodRuleTests
 {
@@ -131,9 +133,9 @@ TEST_CASE("2D Trapezoid Rule")
 
   SECTION("Integrating a callable")
   {
-    SECTION("integrating sin(x)sin(y)")
+    SECTION("integrating std::sin(x)std::sin(y)")
     {
-      auto f = [](double x, double y) { return sin(x) * sin(y); };
+      auto f = [](double x, double y) { return std::sin(x) * std::sin(y); };
 
       I = integrate(f, 0, M_PI / 2, 100, 0, M_PI / 2, 100);
       CHECK(I < 1);
@@ -155,12 +157,11 @@ TEST_CASE("2D Trapezoid Rule")
     for(size_t i = 0; i < f.size(); i++) {
       f[i] = std::vector<double>(200);
       for(size_t j = 0; j < f[i].size(); j++) {
-        f[i][j] = sin(x[i]) * sin(y[j]);
+        f[i][j] = std::sin(x[i]) * std::sin(y[j]);
       }
     }
 
     I = integrate(x, y, f);
-
   }
 }
 
