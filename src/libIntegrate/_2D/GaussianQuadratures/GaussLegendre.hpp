@@ -1,7 +1,7 @@
 #pragma once
 
 /** @file GaussLegendre.hpp
-  * @brief 
+  * @brief
   * @author C.D. Clark III
   * @date 08/04/17
   */
@@ -45,7 +45,7 @@ T GaussLegendreQuadrature<T,Order>::operator()(F f, X a, X b, Y c, Y d) const
   X amb = (b - a)/2;
   std::array<T, Order> sums;
 
-  #pragma parallel for
+  #pragma omp parallel for
   for(std::size_t i = 0; i < Order; i++)
     sums[i] = _1dInt( [&](Y y){ return f(apb + amb*_1dInt.getX()[i], y); }, c, d );
 
