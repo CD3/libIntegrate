@@ -7,12 +7,10 @@ include(CMakePrintHelpers)
 
 option(BUILD_TESTS "Build unit tests" ON)
 
-set(libIntegrate_VERSION "UNKNOWN" CACHE STRING "Library version number")
+set(libIntegrate_VERSION "1.2" CACHE STRING "Library version number")
 set(libIntegrate_VERSION $CACHE{libIntegrate_VERSION} )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
-include(macro-git_version)
-git_version(libIntegrate)
 message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
 
 find_package(Boost REQUIRED)

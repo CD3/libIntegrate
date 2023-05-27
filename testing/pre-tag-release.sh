@@ -14,12 +14,12 @@ trap cleanup EXIT
 
 mkdir $bindir
 cd $bindir
-cmake .. -DCMAKE_INSTALL_PREFIX=$bindir/install
-cmake --build .
-cmake --build . --target test
+conan install .. -s build_type=Release
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release
 
 # test install
-cmake --build . --target install
+cmake --install . --prefix $PWD/INSTALL --config Release
 
 
 
@@ -31,13 +31,10 @@ cd app
 
 cat << EOF > main.cpp
 #include <iostream>
-#include <libIntegrate/libIntegrate_version.h>
 #include <libIntegrate/Integrate.hpp>
 
 int main()
 {
-  std::cout << "VERSION: " << libIntegrate_VERSION << std::endl;
-  std::cout << "FULL VERSION: " << libIntegrate_VERSION_FULL << std::endl;
 
   _1D::TrapezoidRule<double> i1;
   _1D::RiemannRule<double>   i2;
@@ -51,35 +48,19 @@ EOF
 cat << EOF > CMakeLists.txt
 cmake_minimum_required(VERSION 3.1)
 add_executable( main main.cpp )
-find_package( libIntegrate REQUIRED PATHS ${bindir}/install )
+find_package( libIntegrate REQUIRED )
 target_link_libraries(main libIntegrate::Integrate )
 set_target_properties(main PROPERTIES CXX_STANDARD 11)
 EOF
 
 mkdir build1
 cd build1
-cmake .. -DlibIntegrate_DIR=${bindir}/install/cmake/libInegrate
-cmake --build .
-./main
+conan install ${root} -s build_type=Release
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DlibIntegrate_DIR=${bindir}/INSTALL/lib/cmake/ -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release
+$(find . -type f -name main)
 
 cd ..
-
-mkdir build2
-cd build2
-cmake ..
-cmake --build .
-./main
-
-cd ..
-
-
-
-
-
-
-
-
-
 
 echo "PASSED"
 
