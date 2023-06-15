@@ -48,6 +48,7 @@ target_link_libraries(Integrate INTERFACE Boost::boost)
 target_compile_features(Integrate INTERFACE cxx_std_11)
 
 if(BUILD_TESTS)
+  enable_testing()
   add_subdirectory(testing)
 endif()
 

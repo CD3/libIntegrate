@@ -1,5 +1,4 @@
 message( "Configuring unit test build." )
-enable_testing()
 
 set( buildDir ${CMAKE_BINARY_DIR} )
 set( binDir ${CMAKE_BINARY_DIR}/testBin )
