@@ -5,3 +5,4 @@ setup-and-update-utils.sh
 __pycache__/
 .cache/
 compile_commands.json
+CMakeUserPresets.json

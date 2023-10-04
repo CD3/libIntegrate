@@ -10,7 +10,7 @@ option(BUILD_TESTS "Build unit tests" ON)
 set(libIntegrate_VERSION "1.2" CACHE STRING "Library version number")
 set(libIntegrate_VERSION $CACHE{libIntegrate_VERSION} )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
 
 find_package(Boost REQUIRED)
@@ -20,8 +20,8 @@ add_library(libIntegrate::Integrate ALIAS Integrate)
 target_include_directories(
   Integrate
   INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_sources(
@@ -45,7 +45,7 @@ target_sources(
 )
 
 target_link_libraries(Integrate INTERFACE Boost::boost)
-target_compile_features(Integrate INTERFACE cxx_std_11)
+target_compile_features(Integrate INTERFACE cxx_std_14)
 
 if(BUILD_TESTS)
   enable_testing()

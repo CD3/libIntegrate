@@ -14,23 +14,17 @@
 #include <libInterpolate/Interpolate.hpp>
 
 #include <libIntegrate/Integrate.hpp>
-#include <libIntegrate/libIntegrate_version.h>
 #include <libIntegrate/_1D/RandomAccessLambda.hpp>
 
 using namespace std;
 namespace po = boost::program_options;
 
 
-void print_version()
-{
-  cout<<"integrate-cli - linked against libIntegrate version "<< libIntegrate_VERSION_FULL << endl;
-}
-
 void print_usage(char prog_name[])
 {
 
   cout<<"usage: "<<prog_name<<" [OPTIONS]"<<"\n";
-  
+
 }
 
 void print_documentation( )
@@ -113,7 +107,6 @@ int main( int argc, char* argv[])
 
     if (argc == 1 || vm.count("help"))
     {
-      print_version();
       print_usage( argv[0] );
       cout<<"\n";
       cout << options<< "\n";
@@ -125,7 +118,6 @@ int main( int argc, char* argv[])
 
     if (vm.count("list"))
     {
-      print_version();
       cout<<"\t'riemann' : simple riemann sum\n";
       cout<<"\t'trapezoid' : trapezoid rule\n";
       cout<<"\t'simpson' : simposon's rule (uses interpolation)\n";
@@ -166,7 +158,7 @@ int main( int argc, char* argv[])
       cerr << "ERROR: Unrecognized integration method (" << vm["method"].as<string>()<< ")." << endl;
       return 0;
     }
-    
+
     std::vector<double> X(x,x+n),Y(y,y+n);
 
     delete[] x;
@@ -179,14 +171,14 @@ int main( int argc, char* argv[])
         sum = integrate(X,Y,0,n);
         std::cout << X[n] << " " << sum <<  "\n";
       }
-      
+
     }
     else
     {
     sum = integrate(X,Y,0,-1);
     std::cout << sum << "\n";
     }
-  
+
     return 0;
 }
 
@@ -210,7 +202,7 @@ void ReadFunction(std::istream &_in, double  *&_x, double *&_y, int *&_n, int _d
   int n;
 
   std::string line;
-  
+
 
   buffsize = chunck;
 
