@@ -1,3 +1,6 @@
+list:
+  just --list
+
 app-setup:
   mkdir -p build-app
 
