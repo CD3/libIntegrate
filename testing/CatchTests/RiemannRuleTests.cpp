@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <iterator>
 #include <numeric>
 
 #include <catch2/benchmark/catch_benchmark.hpp>
