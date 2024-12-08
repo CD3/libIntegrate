@@ -47,11 +47,6 @@ target_sources(
 target_link_libraries(Integrate INTERFACE Boost::boost)
 target_compile_features(Integrate INTERFACE cxx_std_14)
 
-if(BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(testing)
-endif()
-
 install(TARGETS Integrate EXPORT libIntegrateTargets)
 
 install(
@@ -86,6 +81,11 @@ install(
         ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
 if (PROJECT_IS_TOP_LEVEL)
+  if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(testing)
+  endif()
+
   include(InstallRequiredSystemLibraries)
 
   set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
