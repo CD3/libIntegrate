@@ -47,11 +47,6 @@ target_sources(
 target_link_libraries(Integrate INTERFACE Boost::boost)
 target_compile_features(Integrate INTERFACE cxx_std_14)
 
-if(BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(testing)
-endif()
-
 install(TARGETS Integrate EXPORT libIntegrateTargets)
 
 install(
@@ -85,20 +80,27 @@ install(
   FILES ${CMAKE_BINARY_DIR}/libIntegrateConfig.cmake
         ${CMAKE_BINARY_DIR}/libIntegrateConfigVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
-include(InstallRequiredSystemLibraries)
+if (PROJECT_IS_TOP_LEVEL)
+  if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(testing)
+  endif()
 
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
-    "A C++ library for numerical integration.")
-set(CPACK_PACKAGE_VENDOR "C.D. Clark III")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.md")
-if(libIntegrate_VERSION_MAJOR)
-  set(CPACK_PACKAGE_VERSION_MAJOR ${libIntegrate_VERSION_MAJOR})
+  include(InstallRequiredSystemLibraries)
+
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
+      "A C++ library for numerical integration.")
+  set(CPACK_PACKAGE_VENDOR "C.D. Clark III")
+  set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.md")
+  if(libIntegrate_VERSION_MAJOR)
+    set(CPACK_PACKAGE_VERSION_MAJOR ${libIntegrate_VERSION_MAJOR})
+  endif()
+  if(libIntegrate_VERSION_MINOR)
+    set(CPACK_PACKAGE_VERSION_MINOR ${libIntegrate_VERSION_MINOR})
+  endif()
+  if(libIntegrate_VERSION_PATCH)
+    set(CPACK_PACKAGE_VERSION_PATCH ${libIntegrate_VERSION_PATCH})
+  endif()
+  include(CPack)
 endif()
-if(libIntegrate_VERSION_MINOR)
-  set(CPACK_PACKAGE_VERSION_MINOR ${libIntegrate_VERSION_MINOR})
-endif()
-if(libIntegrate_VERSION_PATCH)
-  set(CPACK_PACKAGE_VERSION_PATCH ${libIntegrate_VERSION_PATCH})
-endif()
-include(CPack)
