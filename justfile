@@ -17,15 +17,15 @@ app-build:
   cmake --build build-app --config Release
 
 lib-setup:
-  mkdir -p build-lib
+  run-if --target build-lib -- mkdir -p build-lib
 
 lib-deps:
   just lib-setup
-  conan install . -of build-lib
+  run-if --dependency conanfile.txt --target build-lib/conan_toolchain.cmake -- conan install . -of build-lib
 
 lib-configure:
   just lib-deps
-  cmake -B build-lib -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+  run-if --dependency CMakeLists.txt --target build-lib/CMakeCache.txt -- cmake -B build-lib -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 
 lib-build:
   just lib-configure

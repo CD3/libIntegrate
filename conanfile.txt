@@ -1,5 +1,5 @@
 [requires]
-boost/1.80.0
+boost/1.86.0
 libinterpolate/2.6.2
 catch2/3.3.1
 
