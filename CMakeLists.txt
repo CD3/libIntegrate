@@ -1,5 +1,39 @@
 cmake_minimum_required(VERSION 3.20)
-project(libIntegrate)
+
+
+include("version.cmake")
+if(NOT DEFINED libIntegrate_FULL_VERSION)
+  message(STATUS "Version not set, attempting to detected with git")
+  execute_process(
+    COMMAND git describe --tags --always --dirty
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_VARIABLE GIT_DESCRIBE_ERROR
+    ERROR_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE GIT_DESCRIBE_RESULT
+  )
+  if("${GIT_DESCRIBE_RESULT}" STREQUAL "0")
+    message(STATUS "Version detected with git")
+    set(libIntegrate_FULL_VERSION "${GIT_DESCRIBE_VERSION}" CACHE STRING "Full build version number")
+  else()
+    message(WARNING "Could NOT detect version number with git")
+    message(WARNING "STDERR: ${GIT_DESCRIBE_RESULT} ${GIT_DESCRIBE_ERROR}")
+    set(libIntegrate_FULL_VERSION "0.0.0-UNKNOWN" CACHE STRING "WARNING!! Full build version number could not be determined.")
+  endif()
+endif()
+
+# remove 'v' from beginning of version string if it is there
+STRING(SUBSTRING "${libIntegrate_FULL_VERSION}" 0 1 LEADING_CHAR)
+if( LEADING_CHAR STREQUAL "v" )
+STRING(SUBSTRING "${libIntegrate_FULL_VERSION}" 1 -1 libIntegrate_FULL_VERSION)
+endif()
+string(REGEX MATCH "^[0-9]+(\\.[0-9]+)*" libIntegrate_PROJECT_VERSION_NUMERIC "${libIntegrate_FULL_VERSION}")
+
+message(STATUS "FULL VERSION: ${libIntegrate_FULL_VERSION}")  
+message(STATUS "NUMERIC VERSION NUMBER: ${libIntegrate_PROJECT_VERSION_NUMERIC}")  
+# NOTE: this will create a variables named libIntegrate_VERSION
+project(libIntegrate VERSION ${libIntegrate_PROJECT_VERSION_NUMERIC})
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -7,11 +41,7 @@ include(CMakePrintHelpers)
 
 option(BUILD_TESTS "Build unit tests" ON)
 
-set(libIntegrate_VERSION "1.2" CACHE STRING "Library version number")
-set(libIntegrate_VERSION $CACHE{libIntegrate_VERSION} )
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
-message(STATUS "libIntegrate version: ${libIntegrate_VERSION}")
+message(STATUS "libIntegrate project version: ${libIntegrate_VERSION}")
 
 find_package(Boost REQUIRED)
 
@@ -24,6 +54,10 @@ target_include_directories(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/libIntegrate/version.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/include/libIntegrate/version.h"
+)
 target_sources(
   Integrate
   INTERFACE

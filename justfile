@@ -33,4 +33,4 @@ lib-build:
 
 lib-test:
   just lib-build
-  ./build-lib/testing/Release/libIntegrate_CatchTests
+  cd build-lib && ./testing/Release/libIntegrate_CatchTests
