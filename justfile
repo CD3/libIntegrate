@@ -34,3 +34,6 @@ lib-build:
 lib-test:
   just lib-build
   cd build-lib && ./testing/Release/libIntegrate_CatchTests
+
+release VERSION:
+  uv run python scripts/make-release.py {{VERSION}}
