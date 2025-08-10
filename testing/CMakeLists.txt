@@ -1,4 +1,4 @@
-message( "Configuring unit test build." )
+message( STATUS "Configuring unit test build." )
 
 set( buildDir ${CMAKE_BINARY_DIR} )
 set( binDir ${CMAKE_BINARY_DIR}/testBin )
@@ -29,7 +29,7 @@ set_target_properties(${testName} PROPERTIES CXX_STANDARD 14)
 if(MSVC)
   target_compile_options(${testName} PRIVATE /W4 /WX -wd4068)
 else()
-  target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -pedantic -Werror)
+  target_compile_options(${testName} PRIVATE -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-parameter -Wno-array-bounds -pedantic -Werror)
 endif()
 
 add_test(NAME ${testName} 
