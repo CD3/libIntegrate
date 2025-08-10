@@ -90,7 +90,6 @@ class SimpsonRule
       // we will use the last *three* points to fit the polynomial
       // but then integrate between the last *two* points.
       i = bi-2;
-      assert( i >= 0 );
       auto x1 = getElement(x,i);
       auto x2 = getElement(x,i+1);
       auto x3 = getElement(x,i+2);
