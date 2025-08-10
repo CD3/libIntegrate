@@ -1,5 +1,6 @@
 #include <numeric>
 #include <vector>
+#include <cmath>
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -149,3 +150,4 @@ TEST_CASE("2D getSize functions")
     CHECK(getSizeY(v) == 20);
   }
 }
+

@@ -165,14 +165,5 @@ TEST_CASE("1D Riemann rule with Algorithms.")
 
   I = integrate(x, y);
 
-  std::cout << I << std::endl;
-
-  std::vector<double> tmp(N);
-  std::adjacent_difference(std::begin(x), std::prev(std::end(x)), std::begin(tmp));
-
-  std::cout << "\n";
-  std::copy(std::begin(x), std::begin(x) + 3, std::ostream_iterator<double>(std::cout, " "));
-  std::cout << "\n";
-  std::copy(std::begin(tmp), std::begin(tmp) + 3, std::ostream_iterator<double>(std::cout, " "));
-  std::cout << "\n";
+  CHECK(I > 0);
 }

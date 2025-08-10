@@ -2,7 +2,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libIntegrate/Utils.hpp>
 
-using namespace Catch;
 struct A {
   void method(int) const {}
 };

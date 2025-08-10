@@ -7,3 +7,4 @@ __pycache__/
 compile_commands.json
 CMakeUserPresets.json
 .run-if.json
+.aider*
