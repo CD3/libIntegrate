@@ -6,7 +6,7 @@ app-setup:
 
 app-deps:
   just app-setup
-  conan install applications -of build-app
+  conan install applications -of build-app --build missing
 
 app-configure:
   just app-deps
@@ -21,7 +21,7 @@ lib-setup:
 
 lib-deps:
   just lib-setup
-  run-if --dependency conanfile.txt --target build-lib/conan_toolchain.cmake -- conan install . -of build-lib
+  run-if --dependency conanfile.py --target build-lib/conan_toolchain.cmake -- conan install . -of build-lib --build missing
 
 lib-configure:
   just lib-deps
