@@ -1,0 +1,1 @@
+set( libInterpolate_FULL_VERSION "1.3.0")
