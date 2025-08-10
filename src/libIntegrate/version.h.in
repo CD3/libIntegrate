@@ -1,0 +1,3 @@
+#pragma once
+
+#define libIntegrate_FULL_VERSION "@libIntegrate_FULL_VERSION@"
